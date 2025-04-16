@@ -1,21 +1,35 @@
-import React from "react";
-import HighlightCarousel from "./highlight-carousel";
-import GroupProductCarousel from "./group-product-carousel";
+import commonRequest from '@/api/commonRequest';
+import ProductSpotlight from '@/features/buyer/main/section/product-spotlight';
+import Link from 'next/link';
+import GroupProductCarousel from './group-product-carousel';
+import HighlightCarousel from './highlight-carousel';
 
-function MainSection() {
-  return (
-    <div className='flex flex-col justify-center items-center w-full'>
-      <div className='flex flex-row gap-3 mt-5'>
-        <HighlightCarousel data={undefined} />
-        <HighlightCarousel data={undefined} />
-      </div>
+async function MainSection() {
+	const res = await commonRequest.getAllGroupProducts();
+	const data = res.payload.data;
+	return (
+		<div className="flex flex-col justify-center items-center w-10/12 mx-auto mt-5">
+			<div className="flex flex-row gap-3 mt-5">
+				<HighlightCarousel data={undefined} />
+				<HighlightCarousel data={undefined} />
+			</div>
 
-      <div className='flex flex-col justify-center items-center w-full mt-5'>
-        <h4 className="text-center text-green-700 font-bold">Các danh mục</h4>
-        <GroupProductCarousel />
-      </div>
-    </div>
-  );
+			<div className="flex flex-col justify-center items-center w-full mt-5">
+				<h4 className="text-center text-green-700 font-bold">Các danh mục</h4>
+				<GroupProductCarousel data={data} />
+			</div>
+
+			<div className="flex flex-col justify-center items-center w-full mt-5">
+				<h4 className="text-center text-green-700 font-bold">
+					Sản phẩm nổi bật
+				</h4>
+				<ProductSpotlight />
+				<Link href="/buyer/products" className="mt-5">
+					Xem thêm
+				</Link>
+			</div>
+		</div>
+	);
 }
 
 export default MainSection;

@@ -1,17 +1,17 @@
-import z from "zod";
+import z from 'zod';
 
 export const MessageRes = z
-  .object({
-    message: z.string(),
-  })
-  .strict();
+	.object({
+		message: z.string(),
+	})
+	.strict();
 
 export const PaginationReq = z
-  .object({
-    page: z.coerce.number().int().positive().default(1),
-    limit: z.coerce.number().int().positive().default(10),
-  })
-  .strict();
+	.object({
+		page: z.coerce.number().int().positive().default(1).optional(),
+		limit: z.coerce.number().int().positive().default(9).optional(),
+	})
+	.strict();
 
 export type PaginationReqType = z.TypeOf<typeof PaginationReq>;
 

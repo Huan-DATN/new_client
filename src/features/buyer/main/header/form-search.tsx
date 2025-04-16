@@ -1,81 +1,83 @@
-"use client";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
-  SearchFormValidate,
-  SearchFormValidateType,
-} from "@/schemaValidations/form/searchForm";
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+	SearchFormValidate,
+	SearchFormValidateType,
+} from '@/schemaValidations/form/searchForm';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 function FormSearch() {
-  const form = useForm<SearchFormValidateType>({
-    resolver: zodResolver(SearchFormValidate),
-    defaultValues: {
-      type: "PRODUCT",
-      q: "",
-    },
-  });
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const form = useForm<SearchFormValidateType>({
+		resolver: zodResolver(SearchFormValidate),
+		defaultValues: {
+			type: 'PRODUCT',
+			q: '',
+		},
+	});
 
-  const onSubmit = (data: SearchFormValidateType) => {
-    console.log(data);
-  };
-  return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='flex flex-row justify-center items-center gap-1'
-      >
-        <FormField
-          control={form.control}
-          name='type'
-          render={({ field }) => (
-            <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Product' />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value='PRODUCT'>Product</SelectItem>
-                  <SelectItem value='SHOP'>Shop</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='q'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder='shadcn' {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <Button type='submit'>Submit</Button>
-      </form>
-    </Form>
-  );
+	const onSubmit = (data: SearchFormValidateType) => {
+		const params = new URLSearchParams(searchParams.toString());
+		if (data.q) {
+			params.set('name', data.q);
+		} else {
+			params.delete('name');
+		}
+
+		router.push(`/buyer/products?${params.toString()}`);
+		router.refresh();
+	};
+	return (
+		<Form {...form}>
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="flex flex-row justify-center items-center gap-1"
+			>
+				<FormField
+					control={form.control}
+					name="type"
+					render={({ field }) => (
+						<FormItem>
+							<Select onValueChange={field.onChange} defaultValue={field.value}>
+								<FormControl className="w-32">
+									<SelectTrigger>
+										<SelectValue placeholder="Product" />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									<SelectItem value="PRODUCT">Sản phẩm</SelectItem>
+									<SelectItem value="SHOP">Shop</SelectItem>
+								</SelectContent>
+							</Select>
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="q"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl className="w-96">
+								<Input placeholder="Nhập thông tin cần tìm" {...field} />
+							</FormControl>
+						</FormItem>
+					)}
+				/>
+				<Button type="submit">Submit</Button>
+			</form>
+		</Form>
+	);
 }
 
 export default FormSearch;

@@ -1,9 +1,7 @@
-import React from 'react'
+import ProductList from '@/features/buyer/products/[[...products]]/products-list';
 
 function Page() {
-  return (
-    <div>Page</div>
-  )
+	return <ProductList />;
 }
 
-export default Page
+export default Page;
