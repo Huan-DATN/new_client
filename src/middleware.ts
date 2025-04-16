@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-const authPaths = ['/login', '/register'];
+const authPaths = ['/auth/login', '/auth/register'];
 const productEditRegex = /^\/products\/\d+\/edit$/;
 const cartRegex = /^\/cart\/\d+$/;
 const privateRegex = [cartRegex];
@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
 	const sessionToken = request.cookies.get('sessionToken')?.value;
 	// Chưa đăng nhập thì không cho vào private paths
 	if (privateRegex.some((regex) => pathname.match(regex)) && !sessionToken) {
-		return NextResponse.redirect(new URL('/login', request.url));
+		return NextResponse.redirect(new URL('/auth/login', request.url));
 	}
 	// Đăng nhập rồi thì không cho vào login/register nữa
 	if (
@@ -32,5 +32,10 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-	matcher: ['/me', '/login', '/register', '/product/:path*', '/cart/:path*'],
+	matcher: [
+		'/buyer/auth/login',
+		'/buyer/auth/login',
+		'/buyer/product/:path*',
+		'/buyer/cart/:path*',
+	],
 };
