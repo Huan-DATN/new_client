@@ -48,7 +48,7 @@ function AddToCart({ id }: { id: number }) {
 				className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-md font-semibold transition duration-200"
 				asChild
 			>
-				<Link href={`/cart/add/${id}`}>Thêm vào giỏ</Link>
+				<Link href={`/buyer/cart/add/${id}`}>Thêm vào giỏ</Link>
 			</Button>
 		</>
 	);

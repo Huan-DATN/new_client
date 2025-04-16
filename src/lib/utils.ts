@@ -1,6 +1,8 @@
 import { toast } from '@/hooks/use-toast';
 import { EntityError } from '@/lib/http';
+import { TokenPayload } from '@/types/jwt.types';
 import { clsx, type ClassValue } from 'clsx';
+import { jwtDecode } from 'jwt-decode';
 import { UseFormSetError } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
@@ -29,4 +31,9 @@ export const handleErrorApi = ({
 			duration: duration ?? 5000,
 		});
 	}
+};
+
+export const decodeTokenJWT = (token: string): TokenPayload => {
+	const decoded = jwtDecode<TokenPayload>(token);
+	return decoded;
 };

@@ -1,10 +1,22 @@
-import { cookies } from "next/headers";
-import Image from "next/image";
-import { redirect } from "next/navigation";
+import { decodeTokenJWT } from '@/lib/utils';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function Home() {
-  const cookiesStore = await cookies();
-  const sessionToken = cookiesStore.get("sessionToken");
+	const cookiesStore = await cookies();
+	const sessionToken = cookiesStore.get('sessionToken');
 
-  redirect("/buyer/");
+	if (sessionToken) {
+		const role = decodeTokenJWT(sessionToken.value)?.role;
+
+		console.log(role);
+
+		if (role === 'BUYER') {
+			redirect('/buyer/');
+		} else if (role === 'SHOP') {
+			redirect('/shop/');
+		}
+	} else {
+		redirect('/buyer/main');
+	}
 }
