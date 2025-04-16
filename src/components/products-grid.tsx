@@ -17,11 +17,12 @@ function ProductsGrid({
 		'grid grid-cols-5 gap-4': col === 5,
 	});
 	return (
-		<Link className={`${gridStyle} w-full mt-5`} href={'/buyer/products/1'}>
+		<div className={`${gridStyle} w-full mt-5`}>
 			{data.map((item: any) => (
-				<div
+				<Link
 					key={Math.random()}
 					className="flex flex-col border-3 border-gray-300 shadow-lg rounded-lg"
+					href={`/buyer/products/${item.id}`}
 				>
 					<Image
 						src={item.image}
@@ -36,9 +37,9 @@ function ProductsGrid({
 						<p className="text-green-700 font-bold">{item.price}</p>
 						<p className="text-gray-500">Đánh giá: {`4.5 (44)`}</p>
 					</div>
-				</div>
+				</Link>
 			))}
-		</Link>
+		</div>
 	);
 }
 

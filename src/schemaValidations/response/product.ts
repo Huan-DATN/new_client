@@ -11,3 +11,10 @@ export const ProductListRes = z.object({
 });
 
 export type ProductListResType = z.infer<typeof ProductListRes>;
+
+export const ProductRes = z.object({
+	data: ProductSchema,
+	message: z.string(),
+});
+
+export type ProductResType = z.infer<typeof ProductRes>;

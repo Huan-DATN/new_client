@@ -60,6 +60,7 @@ export const ProductSchema = z.object({
 	price: z.number(),
 	userId: z.number().int(),
 	quantity: z.number().int(),
+	star: z.number().int(),
 	image: z.string().nullable().optional(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
@@ -86,6 +87,12 @@ export const ProductSchema = z.object({
 		.object({
 			id: z.number().int(),
 			shopName: z.string().nullable().optional(),
+		})
+		.optional(),
+	city: z
+		.object({
+			id: z.number().int(),
+			name: z.string(),
 		})
 		.optional(),
 });

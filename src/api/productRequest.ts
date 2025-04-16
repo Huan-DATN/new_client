@@ -1,6 +1,9 @@
 import { PaginationReqType } from '@/schemaValidations/common.schema';
 import { SearchProductQueryType } from '@/schemaValidations/request/product';
-import { ProductListResType } from '@/schemaValidations/response/product';
+import {
+	ProductListResType,
+	ProductResType,
+} from '@/schemaValidations/response/product';
 import http from '../lib/http';
 
 const productRequest = {
@@ -30,6 +33,9 @@ const productRequest = {
 			url += `?${params.toString()}`;
 		}
 		return http.get<ProductListResType>(url);
+	},
+	getDetail: (id: number) => {
+		return http.get<ProductResType>(`/products/${id}`);
 	},
 };
 
