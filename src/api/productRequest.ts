@@ -37,6 +37,23 @@ const productRequest = {
 	getDetail: (id: number) => {
 		return http.get<ProductResType>(`/products/${id}`);
 	},
+	getListByShopId: (id: number, { page, limit }: PaginationReqType) => {
+		let url = `/products/shop/${id}`;
+		const params = new URLSearchParams();
+
+		if (page) {
+			params.append('page', page.toString());
+		}
+
+		if (limit) {
+			params.append('limit', limit.toString());
+		}
+
+		if (params.toString()) {
+			url += `?${params.toString()}`;
+		}
+		return http.get<ProductListResType>(url);
+	},
 };
 
 export default productRequest;

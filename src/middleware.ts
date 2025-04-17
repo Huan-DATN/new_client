@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 const authPaths = ['/auth/login', '/auth/register'];
 const productEditRegex = /^\/products\/\d+\/edit$/;
-const cartRegex = /^\/cart\/\d+$/;
+const cartRegex = /^\/buyer\/cart\/\d+$/;
 const privateRegex = [cartRegex];
 
 // This function can be marked `async` if using `await` inside

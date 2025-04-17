@@ -1,7 +1,10 @@
+import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import FormSearch from './form-search';
-function BottomHeader() {
+
+async function BottomHeader() {
+	const sessionToken = (await cookies()).get('sessionToken')?.value;
 	return (
 		<div className="flex flex-row justify-between items-center w-full bg-white shadow-md p-3">
 			<Link href="/buyer">
@@ -18,8 +21,14 @@ function BottomHeader() {
 			</div>
 
 			<div className="flex flex-row gap-3">
-				<Link href={`/auth/login`}>Đăng nhập</Link>
-				<Link href={`/buyer/cart/me`}>Giỏ hàng</Link>
+				{sessionToken ? (
+					<>
+						<Link href={`/buyer/profile/me`}>Tài khoản</Link>
+						<Link href={`/buyer/cart/me`}>Giỏ hàng</Link>
+					</>
+				) : (
+					<Link href={`/auth/login`}>Đăng nhập</Link>
+				)}
 			</div>
 		</div>
 	);

@@ -40,7 +40,10 @@ async function ProductDetail({ id }: { id: string }) {
 							<p>{data.city!.name}</p>
 						</div>
 						<div>
-							<Link href={`/shop/${data.user!.id}`} className="flex gap-4">
+							<Link
+								href={`/buyer/shop/${data.user!.id}`}
+								className="flex gap-4"
+							>
 								<p className="font-semibold">Chủ shop:</p>
 								{data.user!.shopName || 'Người bán'}
 							</Link>

@@ -82,12 +82,14 @@ function CartGroupShop({ data }: { data: CartType }) {
 							Tổng cộng: {data.totalPrice} VND
 						</p>
 						<div>
-							<Link
-								href={`/buyer/cart/remove/shop/${data.shop.id}`}
-								className="bg-red-600 text-white mr-2 hover:bg-red-700"
-							>
-								Xoá giỏ hàng
-							</Link>
+							<Button asChild>
+								<Link
+									className="bg-red-600 text-white mr-2 hover:bg-red-700"
+									href={`/buyer/cart/remove/shop/${data.shop.id}`}
+								>
+									Xoá giỏ hàng
+								</Link>
+							</Button>
 							<Button className="bg-green-600 text-white hover:bg-green-700">
 								Thanh toán
 							</Button>
