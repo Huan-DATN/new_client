@@ -10,8 +10,10 @@ import {
 } from '@/redux/currentProduct/currentProductReducer';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { useAppContext } from '../../../../context/app-provider';
 
 function AddToCart({ id }: { id: number }) {
+	const { isAuthenticated } = useAppContext();
 	const dispatch = useAppDispatch();
 	const quantity = useAppSelector((state) => state.currentProduct.quantity);
 
@@ -28,28 +30,37 @@ function AddToCart({ id }: { id: number }) {
 
 	return (
 		<>
-			<div className="flex items-center gap-3 mb-4">
-				<Button
-					className="w-8 h-8 bg-green-700 flex items-center justify-center border border-gray-300 rounded text-lg"
-					onClick={handleDecrease}
-				>
-					-
-				</Button>
-				<span className="text-base font-medium">{quantity}</span>
-				<Button
-					className="w-8 h-8 bg-green-700 flex items-center justify-center border border-gray-300 rounded text-lg"
-					onClick={handleIncrease}
-				>
-					+
-				</Button>
-			</div>
+			{!isAuthenticated ? (
+				<p className="text-red-500 text-sm mb-2">
+					Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng
+				</p>
+			) : (
+				<div>
+					<div className="flex items-center gap-3 mb-4">
+						<Button
+							className="w-8 h-8 bg-green-600 hover:bg-green-700 flex items-center justify-center border border-gray-300 rounded text-lg"
+							onClick={handleDecrease}
+						>
+							-
+						</Button>
+						<span className="text-base font-medium">{quantity}</span>
+						<Button
+							className="w-8 h-8 bg-green-600 hover:bg-green-700  flex items-center justify-center border border-gray-300 rounded text-lg"
+							onClick={handleIncrease}
+						>
+							+
+						</Button>
+					</div>
 
-			<Button
-				className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-md font-semibold transition duration-200"
-				asChild
-			>
-				<Link href={`/buyer/cart/add/${id}`}>Thêm vào giỏ</Link>
-			</Button>
+					<Button
+						className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-md font-semibold transition duration-200"
+						disabled={!isAuthenticated}
+						asChild
+					>
+						<Link href={`/buyer/cart/add/${id}`}>Thêm vào giỏ</Link>
+					</Button>
+				</div>
+			)}
 		</>
 	);
 }

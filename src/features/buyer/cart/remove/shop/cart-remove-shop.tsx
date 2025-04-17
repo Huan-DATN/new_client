@@ -3,11 +3,11 @@ import cartRequest from '@/api/cartRequest';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-function CartRemoveItem({ id }: { id: number }) {
+function CartRemoveShop({ id }: { id: number }) {
 	const router = useRouter();
 	useEffect(() => {
 		async function removeItem() {
-			await cartRequest.removeItemFromNextClientToNextServer(id);
+			await cartRequest.removeShopFromNextClientToNextServer(id);
 			router.push('/buyer/cart/me');
 			router.refresh();
 		}
@@ -17,4 +17,4 @@ function CartRemoveItem({ id }: { id: number }) {
 	return <div></div>;
 }
 
-export default CartRemoveItem;
+export default CartRemoveShop;

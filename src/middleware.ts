@@ -33,8 +33,8 @@ export function middleware(request: NextRequest) {
 // See "Matching Paths" below to learn more
 export const config = {
 	matcher: [
-		'/buyer/auth/login',
-		'/buyer/auth/login',
+		'/auth/login',
+		'/auth/login',
 		'/buyer/product/:path*',
 		'/buyer/cart/:path*',
 	],

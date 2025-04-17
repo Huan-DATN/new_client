@@ -34,6 +34,22 @@ const cartRequest = {
 				headers: { Authorization: `Bearer ${sessionToken}` },
 			}
 		),
+	removeShopFromNextClientToNextServer: (id: number) =>
+		http.delete(
+			`/api/cart/shop/${id}`,
+			{},
+			{
+				baseUrl: '',
+			}
+		),
+	removeShopFromNextServerToServer: (sessionToken: string, id: number) =>
+		http.delete(
+			`/cart/shop/${id}`,
+			{},
+			{
+				headers: { Authorization: `Bearer ${sessionToken}` },
+			}
+		),
 };
 
 export default cartRequest;

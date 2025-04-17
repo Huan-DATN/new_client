@@ -2,13 +2,14 @@ import productRequest from '@/api/productRequest';
 import Image from 'next/image';
 import Link from 'next/link';
 import AddToCart from './add-to-cart';
+import ProductSimilar from './product-similar';
 
 async function ProductDetail({ id }: { id: string }) {
 	const res = await productRequest.getDetail(Number(id));
 	const data = res.payload.data;
 
 	return (
-		<div className="flex flex-col justify-center items-center w-6/12 mx-auto mt-5 border-2 border-gray-200 rounded-lg shadow-lg">
+		<div className="flex flex-col justify-center items-center w-1/2 mx-auto mt-5 border-2 border-gray-200 rounded-lg p-4">
 			<div className="flex flex-col md:flex-row rounded-lg w-full gap-10 p-4">
 				<Image
 					src={data.image ?? ''}
@@ -59,7 +60,10 @@ async function ProductDetail({ id }: { id: string }) {
 					<AddToCart id={data.id} />
 				</div>
 			</div>
-			<div></div>
+			<div className="w-full mt-5">
+				<h2 className="text-green-700 font-bold">Sản phẩm tương tự</h2>
+				<ProductSimilar data={data} />
+			</div>
 		</div>
 	);
 }
