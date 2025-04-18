@@ -20,7 +20,7 @@ const nextConfig = {
 			},
 			{
 				protocol: 'https',
-				hostname: 'images.pexels.com',
+				hostname: 'res.cloudinary.com',
 				pathname: '/**',
 			},
 		],

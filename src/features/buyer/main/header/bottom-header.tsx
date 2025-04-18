@@ -23,7 +23,7 @@ async function BottomHeader() {
 			<div className="flex flex-row gap-3">
 				{sessionToken ? (
 					<>
-						<Link href={`/buyer/profile/me`}>Tài khoản</Link>
+						<Link href={`/buyer/profile/`}>Tài khoản</Link>
 						<Link href={`/buyer/cart/me`}>Giỏ hàng</Link>
 					</>
 				) : (
