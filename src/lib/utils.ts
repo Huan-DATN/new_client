@@ -37,3 +37,11 @@ export const decodeTokenJWT = (token: string): TokenPayload => {
 	const decoded = jwtDecode<TokenPayload>(token);
 	return decoded;
 };
+
+export const getRole = (token: string): string => {
+	if (!token) {
+		return '';
+	}
+	const decoded = decodeTokenJWT(token);
+	return decoded.role;
+};

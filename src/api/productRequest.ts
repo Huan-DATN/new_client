@@ -54,6 +54,34 @@ const productRequest = {
 		}
 		return http.get<ProductListResType>(url);
 	},
+	getListByMe: (sessionToken: string, { page, limit }: PaginationReqType) => {
+		let url = `/products/me`;
+		const params = new URLSearchParams();
+
+		if (page) {
+			params.append('page', page.toString());
+		}
+
+		if (limit) {
+			params.append('limit', limit.toString());
+		}
+
+		if (params.toString()) {
+			url += `?${params.toString()}`;
+		}
+		return http.get<ProductListResType>(url, {
+			headers: {
+				sessionToken,
+			},
+		});
+	},
+	create: (sessionToken: string, body: any) => {
+		return http.post<ProductResType>(`/products`, body, {
+			headers: {
+				sessionToken,
+			},
+		});
+	},
 };
 
 export default productRequest;

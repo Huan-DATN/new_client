@@ -1,4 +1,6 @@
 import productRequest from '@/api/productRequest';
+import { getRole } from '@/lib/utils';
+import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import AddToCart from './add-to-cart';
@@ -8,8 +10,11 @@ async function ProductDetail({ id }: { id: string }) {
 	const res = await productRequest.getDetail(Number(id));
 	const data = res.payload.data;
 
+	const token = (await cookies()).get('sessionToken')?.value;
+	const role = getRole(token!);
+
 	return (
-		<div className="flex flex-col justify-center items-center w-1/2 mx-auto mt-5 border-2 border-gray-200 rounded-lg p-4">
+		<div className="flex flex-col justify-center items-center w-full mx-auto mt-5 border-2 border-gray-200 rounded-lg p-4">
 			<div className="flex flex-col md:flex-row rounded-lg w-full gap-10 p-4">
 				<Image
 					src={data.image ?? ''}
@@ -25,7 +30,7 @@ async function ProductDetail({ id }: { id: string }) {
 					<div className="flex space-x-1 mb-4">
 						{[...Array(5)].map((_, index) => (
 							<span key={index} className="text-green-400">
-								{index < data.star ? (
+								{index < data.star! ? (
 									<i className="ic-star text-yellow-500" />
 								) : (
 									<i className="ic-star-normal text-gray-400" />
@@ -59,8 +64,7 @@ async function ProductDetail({ id }: { id: string }) {
 					<p className="text-green-600 text-lg font-bold mb-2">
 						Giá bán: {data.price} ₫
 					</p>
-
-					<AddToCart id={data.id} />
+					{role === 'BUYER' && <AddToCart id={data.id} />}
 				</div>
 			</div>
 			<div className="w-full mt-5">

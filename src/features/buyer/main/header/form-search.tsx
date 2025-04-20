@@ -14,6 +14,7 @@ import {
 	SearchFormValidateType,
 } from '@/schemaValidations/form/searchForm';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Search } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 function FormSearch() {
@@ -74,7 +75,9 @@ function FormSearch() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Submit</Button>
+				<Button type="submit" variant="ghost" size="icon">
+					<Search className="font-white bg-green-600" />
+				</Button>
 			</form>
 		</Form>
 	);

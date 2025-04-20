@@ -13,8 +13,8 @@ export default async function Home() {
 
 		if (role === 'BUYER') {
 			redirect('/buyer/');
-		} else if (role === 'SHOP') {
-			redirect('/shop/');
+		} else if (role === 'SELLER') {
+			redirect('/seller/');
 		}
 	} else {
 		redirect('/buyer/main');
