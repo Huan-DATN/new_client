@@ -1,5 +1,5 @@
+import { ShopsListResType } from '@/schemaValidations/response/user';
 import clsx from 'clsx';
-import { ShopsListResType } from '../../../../schemaValidations/response/user';
 import ShopCard from './shop-card';
 
 function ShopsGrid({

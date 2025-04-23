@@ -1,5 +1,4 @@
 'use client';
-
 import authRequest from '@/api/authRequest';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,7 +12,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { useAppContext } from '@/context/app-provider';
 import { handleErrorApi } from '@/lib/utils';
-import { LoginBody, LoginBodyType } from '@/schemaValidations/auth.schema';
+import {
+	SellerRegisterBody,
+	SellerRegisterBodyType,
+} from '@/schemaValidations/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -21,35 +23,35 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-const LoginForm = () => {
+function SellerRegisterForm() {
 	const [loading, setLoading] = useState(false);
 	const { setUser } = useAppContext();
-	const form = useForm<LoginBodyType>({
-		resolver: zodResolver(LoginBody),
+	const router = useRouter();
+	const form = useForm<SellerRegisterBodyType>({
+		resolver: zodResolver(SellerRegisterBody),
 		defaultValues: {
+			role: 'SELLER',
+			shopName: '',
+			phone: '',
 			email: '',
 			password: '',
+			confirmPassword: '',
 		},
 	});
 
-	const router = useRouter();
-
-	async function onSubmit(values: LoginBodyType) {
+	async function onSubmit(values: SellerRegisterBodyType) {
 		if (loading) return;
 		setLoading(true);
 		try {
-			const result = await authRequest.login(values);
+			const result = await authRequest.register(values);
 			await authRequest.auth({
 				sessionToken: result.payload.data.token,
 				expiresAt: result.payload.data.expiresAt,
 			});
 
 			setUser(result.payload.data.user);
-
-			toast('Đăng nhập thành công', {
-				description: result.payload.message,
-			});
-
+			toast.success(result.payload.message);
+			setUser(result.payload.data.user);
 			router.push('/');
 			router.refresh();
 		} catch (error: any) {
@@ -71,12 +73,39 @@ const LoginForm = () => {
 			>
 				<FormField
 					control={form.control}
+					name="shopName"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Tên shop</FormLabel>
+							<FormControl>
+								<Input {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="phone"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Điện thoại</FormLabel>
+							<FormControl>
+								<Input type="tel" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
 					name="email"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Tên đăng nhập</FormLabel>
+							<FormLabel>Email</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input type="email" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -95,19 +124,32 @@ const LoginForm = () => {
 						</FormItem>
 					)}
 				/>
+				<FormField
+					control={form.control}
+					name="confirmPassword"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Nhập lại mật khẩu</FormLabel>
+							<FormControl>
+								<Input {...field} type="password" />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 				<Button type="submit" className="!mt-8 w-full">
-					Đăng nhập
+					Đăng kí
 				</Button>
 			</form>
 			<div className="text-center mt-8">
-				Bạn chưa có tài khoản?
-				<Link href={'/auth/register'} className="font-bold">
+				Bạn đã có tài khoản?
+				<Link href={'/login'} className="font-bold">
 					{' '}
-					Đăng ký ngay
+					Hãy đăng nhập
 				</Link>
 			</div>
 		</Form>
 	);
-};
+}
 
-export default LoginForm;
+export default SellerRegisterForm;

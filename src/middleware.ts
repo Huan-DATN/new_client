@@ -6,6 +6,8 @@ const productEditRegex = /^\/products\/\d+\/edit$/;
 const cartRegex = /^\/buyer\/cart\/\d+$/;
 const privateRegex = [cartRegex];
 
+let locales = ['en-US', 'vi-VN'];
+
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
