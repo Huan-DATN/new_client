@@ -17,16 +17,16 @@ function ShopInfo({ data }: { data: any }) {
 			<div className="flex flex-col mt-4">
 				<div className="flex items-center gap-2">
 					<Sprout />
-					<p className="text-sm text-gray-500">{} sản phẩm</p>
+					<p className="text-sm text-gray-500">{20} sản phẩm</p>
 				</div>
 				<div className="flex items-center gap-2">
 					<ShoppingCart />
-					<p className="text-sm text-gray-500">{} lượt bán</p>
+					<p className="text-sm text-gray-500">{300} lượt bán</p>
 				</div>
 				<div className="flex gap-2">
 					<MapPin className="min-w-[24px]" />
 					<p className="text-sm text-gray-500">
-						is simply dummy text of the printing and typesetting industry.
+						54 Nguyễn Thái Học, Phường 7, Quận 10, TP.HCM
 					</p>
 				</div>
 			</div>

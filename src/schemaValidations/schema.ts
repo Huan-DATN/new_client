@@ -100,14 +100,12 @@ export const ProductSchema = z.object({
 			name: z.string(),
 		})
 		.optional(),
-	images: z
-		.array(
-			z.object({
-				id: z.number().int(),
-				publicUrl: z.string(),
-			})
-		)
-		.optional(),
+	images: z.array(
+		z.object({
+			id: z.number().int(),
+			publicUrl: z.string(),
+		})
+	),
 });
 
 // OrderDetail

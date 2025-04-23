@@ -11,7 +11,7 @@ export default function LoginPage() {
 						src={'/img/logoocop.png'}
 						width={200}
 						height={100}
-						alt="flag_VN"
+						alt="logo_ocop"
 					/>
 				</Link>
 				<LoginForm />

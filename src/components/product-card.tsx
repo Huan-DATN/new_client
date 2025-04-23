@@ -1,4 +1,3 @@
-'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -10,7 +9,11 @@ function ProductCard({ data }: { data: any }) {
 			href={`/buyer/products/${data.id}`}
 		>
 			<Image
-				src={data.image}
+				src={
+					data.images && data.images.length > 0
+						? data.images[0].publicUrl
+						: 'https://placehold.co/600x400/png'
+				}
 				alt={`Product ${String(Math.random())}`}
 				width={245}
 				height={300}

@@ -7,7 +7,16 @@ function ProductRow({ data }: { data: ProductListResType['data'][number] }) {
 		<div className="w-full flex flex-row  border-b border-gray-300 py-4 gap-5">
 			<div className="flex flex-col flex-shrink-0 items-center justify-center">
 				<span className="font-semibold text-gray-400">Hình ảnh</span>
-				<Image src={data.image || ''} alt="product" width={50} height={50} />
+				<Image
+					src={
+						data.images.length > 0
+							? data.images[0].publicUrl
+							: 'https://placehold.co/600x400/png'
+					}
+					alt="product"
+					width={50}
+					height={50}
+				/>
 			</div>
 
 			<div className="flex-1">

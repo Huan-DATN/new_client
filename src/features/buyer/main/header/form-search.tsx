@@ -36,7 +36,11 @@ function FormSearch() {
 			params.delete('name');
 		}
 
-		router.push(`/buyer/products?${params.toString()}`);
+		if (data.type === 'PRODUCT') {
+			router.push(`/buyer/products?${params.toString()}`);
+		} else {
+			router.push(`/buyer/shop?${params.toString()}`);
+		}
 		router.refresh();
 	};
 	return (
@@ -76,7 +80,7 @@ function FormSearch() {
 					)}
 				/>
 				<Button type="submit" variant="ghost" size="icon">
-					<Search className="font-white bg-green-600" />
+					<Search className="font-gray bg-white" />
 				</Button>
 			</form>
 		</Form>

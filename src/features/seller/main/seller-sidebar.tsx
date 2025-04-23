@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react';
+import { Calendar, Home, Inbox, Settings } from 'lucide-react';
 
 import {
 	Sidebar,
@@ -15,7 +15,7 @@ import Image from 'next/image';
 const items = [
 	{
 		title: 'Thống kê',
-		url: 'dashboard',
+		url: '/seller/dashboard',
 		icon: Home,
 	},
 	{
@@ -29,12 +29,7 @@ const items = [
 		icon: Calendar,
 	},
 	{
-		title: 'Search',
-		url: '#',
-		icon: Search,
-	},
-	{
-		title: 'Settings',
+		title: 'Cài đặt',
 		url: '#',
 		icon: Settings,
 	},
@@ -46,12 +41,7 @@ function SellerSidebar() {
 			<SidebarContent>
 				<SidebarGroup>
 					<SidebarGroupLabel className="flex items-center justify-center mt-5">
-						<Image
-							src={`https://dyh48pub5c8mm.cloudfront.net/home/common/s3_site_logo.png`}
-							width={174}
-							height={65}
-							alt={''}
-						/>
+						<Image src={`/img/logoocop.png`} width={174} height={65} alt={''} />
 					</SidebarGroupLabel>
 					<SidebarGroupContent className="mt-10">
 						<SidebarMenu>

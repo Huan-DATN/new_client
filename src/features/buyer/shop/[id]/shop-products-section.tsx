@@ -30,7 +30,7 @@ function ShopProductsSection({ id }: { id: number }) {
 	return (
 		<div>
 			<div className="flex flex-col gap-2 px-5">
-				<ProductsGrid data={products} col={4} />
+				<ProductsGrid data={products} col={3} />
 			</div>
 
 			<div>

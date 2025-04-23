@@ -9,7 +9,7 @@ async function BottomHeader() {
 		<div className="flex flex-row justify-between items-center w-full bg-white shadow-md p-3">
 			<Link href="/buyer">
 				<Image
-					src={`https://dyh48pub5c8mm.cloudfront.net/home/common/s3_site_logo.png`}
+					src={`/img/logoocop.png`}
 					width={174}
 					height={65}
 					alt={''}

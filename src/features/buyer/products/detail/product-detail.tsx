@@ -17,7 +17,11 @@ async function ProductDetail({ id }: { id: string }) {
 		<div className="flex flex-col justify-center items-center w-full mx-auto mt-5 border-2 border-gray-200 rounded-lg p-4">
 			<div className="flex flex-col md:flex-row rounded-lg w-full gap-10 p-4">
 				<Image
-					src={data.image ?? ''}
+					src={
+						data.images && data.images.length > 0
+							? data.images[0].publicUrl
+							: 'https://placehold.co/600x400/png'
+					}
 					alt={data.name}
 					width={300}
 					height={450}
