@@ -28,7 +28,12 @@ function CartGroupShop({ data }: { data: CartType }) {
 					<div key={item.id} className="flex items-center justify-between mt-4">
 						<div className="flex items-center gap-4">
 							<Image
-								src={item.product?.image || ''}
+								src={
+									Array.isArray(item.product.images) &&
+									item.product.images.length > 0
+										? item.product.images[0].publicUrl
+										: 'https://placehold.co/100/png'
+								}
 								alt="Product Image"
 								width={100}
 								height={100}

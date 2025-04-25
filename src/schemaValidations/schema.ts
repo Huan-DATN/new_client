@@ -53,7 +53,12 @@ export const CartItemSchema = z.object({
 		name: z.string(),
 		price: z.number(),
 		description: z.string().nullable().optional(),
-		image: z.string().nullable().optional(),
+		images: z.array(
+			z.object({
+				id: z.number().int(),
+				publicUrl: z.string(),
+			})
+		),
 	}),
 });
 

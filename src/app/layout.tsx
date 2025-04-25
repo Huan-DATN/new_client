@@ -1,9 +1,11 @@
 import { ThemeProvider } from '@/components/them-provider';
 import AppProvider from '@/context/app-provider';
 import type { Metadata } from 'next';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale } from 'next-intl/server';
 import { Inter } from 'next/font/google';
-import './globals.css';
 import { Toaster } from 'sonner';
+import './globals.css';
 const inter = Inter({ subsets: ['vietnamese'] });
 
 export const metadata: Metadata = {
@@ -16,18 +18,22 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const locale = await getLocale();
+
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${inter.className} antialiased`}>
-				<Toaster />
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					<AppProvider>{children}</AppProvider>
-				</ThemeProvider>
+				<NextIntlClientProvider>
+					<Toaster />
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<AppProvider>{children}</AppProvider>
+					</ThemeProvider>
+				</NextIntlClientProvider>
 			</body>
 		</html>
 	);
