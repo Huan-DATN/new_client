@@ -4,5 +4,5 @@ import { redirect } from 'next/navigation';
 export default async function Page() {
 	const cookiesStore = await cookies();
 	const sessionToken = cookiesStore.get('sessionToken');
-	redirect('/seller/dashboard');
+	redirect('/vi/seller/dashboard');
 }

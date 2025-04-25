@@ -12,11 +12,11 @@ export default async function Home() {
 		console.log(role);
 
 		if (role === 'BUYER') {
-			redirect('/buyer/');
+			redirect('/vi/buyer/');
 		} else if (role === 'SELLER') {
-			redirect('/seller/');
+			redirect('/vi/seller/');
 		}
 	} else {
-		redirect('/buyer/main');
+		redirect('/vi/buyer/main');
 	}
 }

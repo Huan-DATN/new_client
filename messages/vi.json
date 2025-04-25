@@ -1,5 +1,8 @@
 {
-	"HomePage": {
-		"title": "Xin chào thế giới!"
+	"seller": {
+		"HomePage": {
+			"productSpotlight": "Sản phẩm nổi bật",
+			"showMore": "Xem thêm"
+		}
 	}
 }

@@ -1,10 +1,11 @@
 import { ThemeProvider } from '@/components/them-provider';
 import AppProvider from '@/context/app-provider';
 import type { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
-import { getLocale } from 'next-intl/server';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { Inter } from 'next/font/google';
+import { notFound } from 'next/navigation';
 import { Toaster } from 'sonner';
+import { routing } from '../../i18n/routing';
 import './globals.css';
 const inter = Inter({ subsets: ['vietnamese'] });
 
@@ -15,10 +16,15 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
 	children,
+	params,
 }: Readonly<{
 	children: React.ReactNode;
+	params: Promise<{ locale: string }>;
 }>) {
-	const locale = await getLocale();
+	const { locale } = await params;
+	if (!hasLocale(routing.locales, locale)) {
+		notFound();
+	}
 
 	return (
 		<html lang="en" suppressHydrationWarning>

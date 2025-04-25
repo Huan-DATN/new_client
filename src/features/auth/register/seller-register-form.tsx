@@ -143,7 +143,7 @@ function SellerRegisterForm() {
 			</form>
 			<div className="text-center mt-8">
 				Bạn đã có tài khoản?
-				<Link href={'/login'} className="font-bold">
+				<Link href={'/auth/login'} className="font-bold">
 					{' '}
 					Hãy đăng nhập
 				</Link>
