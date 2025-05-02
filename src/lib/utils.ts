@@ -45,3 +45,16 @@ export const getRole = (token: string): string => {
 	const decoded = decodeTokenJWT(token);
 	return decoded.role;
 };
+
+export const getPriceFormat = (price: number) =>
+	new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
+		price
+	);
+
+export const getDateFormat = (date: Date) => {
+	return new Intl.DateTimeFormat('vi-VN', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+	}).format(date);
+};

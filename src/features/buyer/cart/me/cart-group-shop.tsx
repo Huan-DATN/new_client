@@ -1,14 +1,15 @@
 import { Button } from '@/components/ui/button';
-import { CartType } from '@/schemaValidations/response/cart';
-import Image from 'next/image';
-import Link from 'next/link';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '../../../../components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
+import { getPriceFormat } from '@/lib/utils';
+import { CartType } from '@/schemaValidations/response/cart';
+import Image from 'next/image';
+import Link from 'next/link';
 
 function CartGroupShop({ data }: { data: CartType }) {
 	return (
@@ -51,14 +52,14 @@ function CartGroupShop({ data }: { data: CartType }) {
 										Số lượng: {item.quantity}
 									</p>
 									<p className="text-l text-gray-500">
-										{item.quantity} x {item.product?.price} VND
+										{item.quantity} x {getPriceFormat(item.product.price)}
 									</p>
 								</div>
 							</div>
 						</div>
 						<div className="flex flex-col items-end">
 							<p className="text-l font-bold text-green-800">
-								{item.quantity * item.product?.price!} VND
+								{getPriceFormat(item.quantity * item.product.price)}
 							</p>
 							<DropdownMenu>
 								<DropdownMenuTrigger>...</DropdownMenuTrigger>
@@ -84,7 +85,7 @@ function CartGroupShop({ data }: { data: CartType }) {
 				<div className="flex flex-row-reverse mt-4">
 					<div className="flex flex-col items-end">
 						<p className="text-2xl font-bold text-green-800">
-							Tổng cộng: {data.totalPrice} VND
+							Tổng cộng: {getPriceFormat(data.totalPrice)}
 						</p>
 						<div>
 							<Button asChild>
@@ -96,7 +97,9 @@ function CartGroupShop({ data }: { data: CartType }) {
 								</Link>
 							</Button>
 							<Button className="bg-green-600 text-white hover:bg-green-700">
-								Thanh toán
+								<Link href={`/buyer/order/checkout/${data.shop.id}`}>
+									Thanh toán
+								</Link>
 							</Button>
 						</div>
 					</div>

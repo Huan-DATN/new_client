@@ -21,11 +21,9 @@ function Layout({
 					Account
 				</TabsTrigger>
 				<TabsTrigger value="password">Password</TabsTrigger>
-				<TabsTrigger value="order">Các đơn hàng</TabsTrigger>
 			</TabsList>
 			<TabsContent value="account">{me}</TabsContent>
 			<TabsContent value="password">password</TabsContent>
-			<TabsContent value="order">{orders}</TabsContent>
 		</Tabs>
 	);
 }
