@@ -71,7 +71,7 @@ const productRequest = {
 		}
 		return http.get<ProductListResType>(url, {
 			headers: {
-				sessionToken,
+				Authorization: `Bearer ${sessionToken}`,
 			},
 		});
 	},

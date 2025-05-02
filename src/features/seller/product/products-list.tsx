@@ -22,6 +22,7 @@ function ProductsList({ sessionToken }: { sessionToken: string }) {
 			});
 
 			const data = response.payload.data;
+			console.log(data);
 			setProducts(data);
 			setTotalPages(response.payload.meta.totalPages);
 		};

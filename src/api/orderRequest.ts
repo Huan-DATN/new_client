@@ -25,8 +25,26 @@ const orderRequest = {
 			}
 		);
 	},
-	getAllOrders: (sessionToken: string) => {
-		return http.get<OrderListResType>('order', {
+	getAllOrders: (
+		sessionToken: string,
+		{ page, limit }: { page?: number; limit?: number }
+	) => {
+		let url = `/order`;
+		const params = new URLSearchParams();
+
+		if (page) {
+			params.append('page', page.toString());
+		}
+
+		if (limit) {
+			params.append('limit', limit.toString());
+		}
+
+		if (params.toString()) {
+			url += `?${params.toString()}`;
+		}
+
+		return http.get<OrderListResType>(url, {
 			headers: {
 				Authorization: `Bearer ${sessionToken}`,
 			},

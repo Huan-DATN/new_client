@@ -135,6 +135,13 @@ export const OrderDetailSchema = z.object({
 			})
 			.optional(),
 	}),
+	user: z.object({
+		id: z.number().int(),
+		firstName: z.string().nullable().optional(),
+		lastName: z.string().nullable().optional(),
+		email: z.string().email(),
+		phone: z.string().nullable().optional(),
+	}),
 	items: z.array(
 		z.object({
 			id: z.number().int(),

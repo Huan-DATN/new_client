@@ -20,7 +20,7 @@ const items = [
 	},
 	{
 		title: 'Đơn hàng',
-		url: '#',
+		url: '/seller/order',
 		icon: Inbox,
 	},
 	{

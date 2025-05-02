@@ -81,12 +81,13 @@ const ProductAddForm = ({
 		try {
 			let images: number[] = [];
 			if (files) {
-				files.map(async (file) => {
+				const uploadPromises = files.map(async (file) => {
 					const formData = new FormData();
 					formData.append('image', file as Blob);
 					const uploadImageResult = await mediaRequest.uploadImage(formData);
-					images.push(uploadImageResult.payload.data.id);
+					return uploadImageResult.payload.data.id;
 				});
+				images = await Promise.all(uploadPromises);
 			}
 			const { imageUrls, ...body } = values;
 			const bodyCreateProduct: CreateProductBodyType = {
@@ -134,13 +135,13 @@ const ProductAddForm = ({
 									onChange={(e) => {
 										const files = e.target.files;
 										if (files && files.length > 0) {
+											console.log('files', files);
 											setFiles(Array.from(files));
 											field.onChange(
 												Array.from(files || []).map((file: File) => {
 													return 'http://localhost:3000/' + file.name;
 												})
 											);
-											console.log(images);
 										}
 									}}
 								/>
