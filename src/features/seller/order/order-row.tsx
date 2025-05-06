@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import StatusComponent from '../../../components/status-component';
 import { getDateFormat, getPriceFormat } from '../../../lib/utils';
 import { OrderListResType } from '../../../schemaValidations/response/order';
 
@@ -24,7 +25,7 @@ function OrderRow({ data }: { data: OrderListResType['data'][number] }) {
 			<div className="flex-1">
 				<span className="font-semibold text-gray-400">Trạng thái</span>
 				<p className="font-bold">
-					{data.OrderStatus[data.OrderStatus.length - 1].status.name}
+					<StatusComponent status={data.OrderStatus[0].status.type} />
 				</p>
 			</div>
 

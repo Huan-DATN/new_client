@@ -27,7 +27,6 @@ function OrdersList({ sessionToken }: { sessionToken: string }) {
 
 		fetchOrders()
 			.then((res) => {
-				console.log(res);
 				setOrders(res.data);
 				setTotalPages(res.meta.totalPages);
 			})

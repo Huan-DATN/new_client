@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { OrderStatusEnum } from '../../constants/orderStatusEnum';
 import { CategorySchema, CitySchema, GroupProductSchema } from '../schema';
 
 export const GroupProductsListRes = z.object({
@@ -20,3 +21,16 @@ export const CityListRes = z.object({
 });
 
 export type CityListResType = z.TypeOf<typeof CityListRes>;
+
+export const StatusListRes = z.object({
+	data: z.array(
+		z.object({
+			id: z.number(),
+			name: z.string(),
+			type: z.nativeEnum(OrderStatusEnum),
+		})
+	),
+	message: z.string(),
+});
+
+export type StatusListResType = z.TypeOf<typeof StatusListRes>;

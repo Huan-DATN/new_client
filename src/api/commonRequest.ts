@@ -3,6 +3,7 @@ import {
 	CategoryListResType,
 	CityListResType,
 	GroupProductsListResType,
+	StatusListResType,
 } from '../schemaValidations/response/common';
 
 const commonRequest = {
@@ -14,6 +15,9 @@ const commonRequest = {
 	},
 	getAllCategories: () => {
 		return http.get<CategoryListResType>('/common/categories');
+	},
+	getAllStatus: () => {
+		return http.get<StatusListResType>('/common/status');
 	},
 };
 

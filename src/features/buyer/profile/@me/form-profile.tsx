@@ -21,11 +21,15 @@ import {
 } from '@/schemaValidations/form/updateBuyerMeForm';
 import { AccountResType } from '@/schemaValidations/response/account';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from '../../../../components/ui/avatar';
 
 type Profile = AccountResType['data'];
 
@@ -94,50 +98,47 @@ const FormProfile = ({ profile }: { profile: Profile }) => {
 					name="imageUrl"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Hình ảnh</FormLabel>
 							<FormControl>
-								<Input
-									type="file"
-									accept="image/*"
-									ref={inputRef}
-									onChange={(e) => {
-										const file = e.target.files?.[0];
-										if (file) {
-											setFile(file);
-											field.onChange('http://localhost:3000/' + file.name);
-										}
-									}}
-								/>
+								<div className="flex flex-col items-center gap-2">
+									<Button
+										type="button"
+										onClick={() => inputRef.current?.click()}
+										disabled={loading}
+										variant="outline"
+										className="w-24 h-24 flex items-center justify-center rounded-full border-dashed border-gray-300 hover:bg-gray-50"
+									>
+										{file || image ? (
+											<Avatar className="w-24 h-24">
+												<AvatarImage
+													src={file ? URL.createObjectURL(file) : image || ''}
+												/>
+												<AvatarFallback>CN</AvatarFallback>
+											</Avatar>
+										) : (
+											<div className="w-24 h-24 flex items-center justify-center bg-gray-200 rounded-full">
+												<span className="text-gray-500">Upload</span>
+											</div>
+										)}
+									</Button>
+									<Input
+										type="file"
+										accept="image/*"
+										ref={inputRef}
+										className="hidden"
+										onChange={(e) => {
+											const file = e.target.files?.[0];
+											if (file) {
+												setFile(file);
+												field.onChange('http://localhost:3000/' + file.name);
+											}
+										}}
+									/>
+								</div>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
-				{(file || image) && (
-					<div>
-						<Image
-							src={file ? URL.createObjectURL(file) : image || ''}
-							width={128}
-							height={128}
-							alt="preview"
-							className="w-32 h-32 object-cover"
-						/>
-						<Button
-							type="button"
-							variant={'destructive'}
-							size={'sm'}
-							onClick={() => {
-								setFile(null);
-								form.setValue('imageUrl', '');
-								if (inputRef.current) {
-									inputRef.current.value = '';
-								}
-							}}
-						>
-							Xóa hình ảnh
-						</Button>
-					</div>
-				)}
 
 				<FormLabel>Email</FormLabel>
 				<FormControl>

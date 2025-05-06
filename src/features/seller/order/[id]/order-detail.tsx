@@ -2,9 +2,13 @@ import orderRequest from '@/api/orderRequest';
 import { Button } from '@/components/ui/button';
 import { getDateFormat, getPriceFormat } from '@/lib/utils';
 import Image from 'next/image';
+import Link from 'next/link';
+import ButtonComplete from './button-complete';
+import OrderTimeLine from './order-timeline';
+
 async function OrderDetail({ id }: { id: number }) {
-	const { payload } = await orderRequest.getOrderDetail(id);
-	console.log(payload.data);
+	const respose = await orderRequest.getOrderDetail(id);
+	const { payload } = respose;
 	return (
 		<div className="w-1/2 mx-auto p-6 shadow-md rounded-xl space-y-6">
 			{/* Header */}
@@ -29,6 +33,13 @@ async function OrderDetail({ id }: { id: number }) {
 						<Button className="bg-red-300 text-sm mt-2 hover:bg-red-400 max-w-1/2!">
 							Hủy đơn
 						</Button>
+						<Button
+							className="bg-blue-300 text-sm mt-2 hover:bg-blue-400 max-w-1/2!"
+							asChild
+						>
+							<Link href={`${payload.data.id}/plan`}>Xác nhận đơn hàng</Link>
+						</Button>
+						<ButtonComplete id={payload.data.id} />
 					</div>
 				</div>
 
@@ -84,17 +95,7 @@ async function OrderDetail({ id }: { id: number }) {
 				</p>
 			</div>
 
-			{/* Lịch sử đơn hàng */}
-			<div className="border-t pt-4">
-				<h4 className="font-semibold mb-2">Lịch sử đơn hàng</h4>
-				<ul className="space-y-1 text-sm">
-					{payload.data.OrderStatus.map((status) => (
-						<li key={status.id} className="text-sm mt-2">
-							{getDateFormat(new Date(status.createdAt))} - {status.status.name}
-						</li>
-					))}
-				</ul>
-			</div>
+			<OrderTimeLine id={payload.data.id} data={payload.data.OrderStatus} />
 		</div>
 	);
 }

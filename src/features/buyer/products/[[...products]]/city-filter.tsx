@@ -1,7 +1,5 @@
 'use client';
-import { Checkbox } from '@/components/ui/checkbox';
 import { CityListResType } from '@/schemaValidations/response/common';
-import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 function CityFilter({ data }: { data: CityListResType['data'] }) {
@@ -12,42 +10,43 @@ function CityFilter({ data }: { data: CityListResType['data'] }) {
 	const checkedPage = params.get('page') || undefined;
 
 	return (
-		<div className="flex flex-col gap-2 px-5">
-			{data.map((item) => (
-				<div key={item.id} className="flex items-center gap-2">
-					<Link
-						href={
-							item.id === Number(checkedCityId)
-								? {
-										pathname: '/buyer/products',
-										query: {
-											cityId: undefined,
-											groupProductId: checkedGroupProductId,
-											name: checkedName,
-											page: 1,
-										},
-								  }
-								: {
-										pathname: '/buyer/products',
-										query: {
-											cityId: item.id,
-											groupProductId: checkedGroupProductId,
-											name: checkedName,
-											page: 1,
-										},
-								  }
-						}
-					>
-						<Checkbox
-							id={`city-${item.id}`}
-							checked={item.id === Number(checkedCityId)}
-						/>
-					</Link>
-					<label htmlFor={`city-${item.id}`} className="text-sm text-gray-700">
+		<div className="px-5">
+			<select
+				className="w-full p-2 border border-gray-300 rounded-md"
+				value={checkedCityId || ''}
+				onChange={(e) => {
+					const selectedCityId = e.target.value || undefined;
+					const query = {
+						cityId: selectedCityId,
+						groupProductId: checkedGroupProductId,
+						name: checkedName,
+					};
+					// Remove the cityId from the query if it's empty
+					if (!selectedCityId) {
+						delete query.cityId;
+					}
+					// Remove the groupProductId from the query if it's empty
+					if (!checkedGroupProductId) {
+						delete query.groupProductId;
+					}
+					// Remove the name from the query if it's empty
+					if (!checkedName) {
+						delete query.name;
+					}
+
+					const queryString = new URLSearchParams(
+						query as Record<string, string>
+					).toString();
+					window.location.href = `/buyer/products?${queryString}`;
+				}}
+			>
+				<option value="">Thành phố</option>
+				{data.map((item) => (
+					<option key={item.id} value={item.id}>
 						{item.name}
-					</label>
-				</div>
-			))}
+					</option>
+				))}
+			</select>
 		</div>
 	);
 }

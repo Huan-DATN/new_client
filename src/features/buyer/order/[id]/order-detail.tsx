@@ -2,6 +2,7 @@ import orderRequest from '@/api/orderRequest';
 import { Button } from '@/components/ui/button';
 import { getDateFormat, getPriceFormat } from '@/lib/utils';
 import Image from 'next/image';
+import StatusComponent from '../../../../components/status-component';
 async function OrderDetail({ id }: { id: number }) {
 	const { payload } = await orderRequest.getOrderDetail(id);
 
@@ -19,12 +20,12 @@ async function OrderDetail({ id }: { id: number }) {
 					<p className="text-sm text-gray-500">Phương thức thanh toán: </p>
 					<p className="text-blue-500">{'COD'}</p>
 					<p className="text-sm text-gray-500">Trạng thái: </p>
-					<p className="text-blue-700">
-						{
+					<StatusComponent
+						status={
 							payload.data.OrderStatus[payload.data.OrderStatus.length - 1]
-								.status.name
+								.status.type
 						}
-					</p>
+					/>
 					<div>
 						<Button className="bg-red-300 text-sm mt-2 hover:bg-red-400 max-w-1/2!">
 							Hủy đơn

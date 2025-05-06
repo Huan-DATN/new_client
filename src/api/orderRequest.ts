@@ -5,6 +5,7 @@ import {
 	OrderDetailResType,
 	OrderListResType,
 } from '../schemaValidations/response/order';
+import { PlanOrderBodyType } from '../schemaValidations/response/plan-order';
 
 const orderRequest = {
 	checkout: (sessionToken: string, shopId: number) => {
@@ -27,8 +28,9 @@ const orderRequest = {
 	},
 	getAllOrders: (
 		sessionToken: string,
-		{ page, limit }: { page?: number; limit?: number }
+		options: { page?: number; limit?: number } = {}
 	) => {
+		const { page, limit } = options;
 		let url = `/order`;
 		const params = new URLSearchParams();
 
@@ -52,6 +54,23 @@ const orderRequest = {
 	},
 	getOrderDetail: (orderId: number) => {
 		return http.get<OrderDetailResType>(`order/${orderId}`, {});
+	},
+	createPlan: (
+		sessionToken: string,
+		shopId: number,
+		body: PlanOrderBodyType
+	) => {
+		return http.post<MessageResType>(`order/${shopId}/plan`, body, {
+			headers: {
+				Authorization: `Bearer ${sessionToken}`,
+			},
+		});
+	},
+	updateOrderStatus: (orderId: number, body: { statusId: number }) => {
+		return http.put<MessageResType>(`order/${orderId}/status`, body, {});
+	},
+	completeOrder: (orderId: number) => {
+		return http.put<MessageResType>(`order/${orderId}/complete`, {}, {});
 	},
 };
 

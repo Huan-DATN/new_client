@@ -1,3 +1,4 @@
+import StatusComponent from '@/components/status-component';
 import { getDateFormat, getPriceFormat } from '@/lib/utils';
 import { OrderListResType } from '@/schemaValidations/response/order';
 import { Warehouse } from 'lucide-react';
@@ -18,7 +19,9 @@ function OrderCard({ data }: { data: OrderListResType['data'][number] }) {
 					<Warehouse />
 					<span>{data.shop.shopName}</span>
 				</div>
-				<span>{data.OrderStatus[data.OrderStatus.length - 1].status.name}</span>
+				<StatusComponent
+					status={data.OrderStatus[data.OrderStatus.length - 1].status.type}
+				/>
 			</div>
 
 			{data.items.map((item) => (
