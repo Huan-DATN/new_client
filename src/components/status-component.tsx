@@ -2,14 +2,14 @@ import { OrderStatusEnum } from '../constants/orderStatusEnum';
 
 function StatusComponent({ status }: { status: OrderStatusEnum }) {
 	const statusStyles = {
-		[OrderStatusEnum.PENDING]: 'text-yellow-500',
-		[OrderStatusEnum.CONFIRMED]: 'text-blue-500',
-		[OrderStatusEnum.PROCESSING]: 'text-orange-500',
-		[OrderStatusEnum.SHIPPED]: 'text-green-500',
-		[OrderStatusEnum.DELIVERED]: 'text-purple-500',
-		[OrderStatusEnum.CANCELLED]: 'text-red-500',
-		[OrderStatusEnum.RETURNED]: 'text-pink-500',
-		[OrderStatusEnum.FAILED]: 'text-gray-500',
+		[OrderStatusEnum.PENDING]: 'yellow-500',
+		[OrderStatusEnum.CONFIRMED]: 'blue-500',
+		[OrderStatusEnum.PROCESSING]: 'orange-500',
+		[OrderStatusEnum.SHIPPED]: 'green-500',
+		[OrderStatusEnum.DELIVERED]: 'green-500',
+		[OrderStatusEnum.CANCELLED]: 'red-500',
+		[OrderStatusEnum.RETURNED]: 'pink-500',
+		[OrderStatusEnum.FAILED]: 'gray-500',
 	};
 
 	const statusIcons = {
@@ -24,7 +24,9 @@ function StatusComponent({ status }: { status: OrderStatusEnum }) {
 	};
 
 	return (
-		<div className={`flex items-center ${statusStyles[status]}`}>
+		<div
+			className={`flex items-center text-${statusStyles[status]} border-2 border-${statusStyles[status]} rounded-full px-2 py-1`}
+		>
 			<span className="mr-2">{statusIcons[status]}</span>
 			<span>{status}</span>
 		</div>

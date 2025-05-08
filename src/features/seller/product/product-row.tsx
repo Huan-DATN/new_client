@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { ProductListResType } from '@/schemaValidations/response/product';
 import Image from 'next/image';
 import Link from 'next/link';
+import ButtonToggleActive from './button-toggle-active';
 function ProductRow({ data }: { data: ProductListResType['data'][number] }) {
 	return (
 		<div className="w-full flex flex-row  border-b border-gray-300 py-4 gap-5">
@@ -48,23 +49,7 @@ function ProductRow({ data }: { data: ProductListResType['data'][number] }) {
 
 			<div className="flex-1 flex">
 				<div className="flex-1 justify-center items-center flex gap-2">
-					<Button asChild>
-						{data.isActive ? (
-							<Link
-								href={`/product/${data.id}/toggle-active`}
-								className="text-red-500 bg-white hover:bg-red-500 hover:text-white border border-red-500 rounded-md px-4 py-2"
-							>
-								Khóa
-							</Link>
-						) : (
-							<Link
-								href={`/product/${data.id}/toggle-active`}
-								className="text-green-500 bg-white hover:bg-green-500 hover:text-white border border-green-500 rounded-md px-4 py-2"
-							>
-								Mở khóa
-							</Link>
-						)}
-					</Button>
+					<ButtonToggleActive id={data.id} isActive={data.isActive} />
 					<Button className="bg-white	text-blue-500 hover:bg-blue-500 hover:text-white border border-blue-500 rounded-md px-4 py-2">
 						<Link href={`/seller/product/${data.id}`}>Xem chi tiết</Link>
 					</Button>

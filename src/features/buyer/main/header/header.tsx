@@ -1,13 +1,14 @@
-import React from "react";
-import TopHeader from "./top-header";
+import { cookies } from 'next/headers';
 import BottomHeader from "./bottom-header";
+import TopHeader from "./top-header";
 
-function Header() {
+async function Header() {
+  const sessionToken = (await cookies()).get('sessionToken')?.value;
   return (
-    <div className='flex flex-col w-full shadow-md'>
+    <header className="sticky top-0 z-50 w-full">
       <TopHeader />
-      <BottomHeader />
-    </div>
+      <BottomHeader sessionToken={sessionToken} />
+    </header>
   );
 }
 

@@ -19,9 +19,7 @@ function OrderCard({ data }: { data: OrderListResType['data'][number] }) {
 					<Warehouse />
 					<span>{data.shop.shopName}</span>
 				</div>
-				<StatusComponent
-					status={data.OrderStatus[data.OrderStatus.length - 1].status.type}
-				/>
+				<StatusComponent status={data.OrderStatus[0].status.type} />
 			</div>
 
 			{data.items.map((item) => (

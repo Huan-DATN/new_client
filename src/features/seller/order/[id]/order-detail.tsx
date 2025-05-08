@@ -1,10 +1,10 @@
 import orderRequest from '@/api/orderRequest';
 import { Button } from '@/components/ui/button';
+import OrderTimeLine from '@/features/components/order-timeline';
 import { getDateFormat, getPriceFormat } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import ButtonComplete from './button-complete';
-import OrderTimeLine from './order-timeline';
 
 async function OrderDetail({ id }: { id: number }) {
 	const respose = await orderRequest.getOrderDetail(id);

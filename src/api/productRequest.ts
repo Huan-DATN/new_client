@@ -8,7 +8,7 @@ import http from '../lib/http';
 
 const productRequest = {
 	getList: (
-		{ page }: PaginationReqType,
+		{ page, limit }: PaginationReqType,
 		{ name, cityId, groupProductId }: SearchProductQueryType
 	) => {
 		let url = `/products`;
@@ -29,6 +29,11 @@ const productRequest = {
 		if (page) {
 			params.append('page', page.toString());
 		}
+
+		if (limit) {
+			params.append('limit', limit.toString());
+		}
+
 		if (params.toString()) {
 			url += `?${params.toString()}`;
 		}
@@ -54,7 +59,11 @@ const productRequest = {
 		}
 		return http.get<ProductListResType>(url);
 	},
-	getListByMe: (sessionToken: string, { page, limit }: PaginationReqType) => {
+	getListByMe: (
+		sessionToken: string,
+		{ page, limit }: PaginationReqType,
+		isActive?: boolean
+	) => {
 		let url = `/products/me`;
 		const params = new URLSearchParams();
 
@@ -69,6 +78,7 @@ const productRequest = {
 		if (params.toString()) {
 			url += `?${params.toString()}`;
 		}
+
 		return http.get<ProductListResType>(url, {
 			headers: {
 				Authorization: `Bearer ${sessionToken}`,
@@ -81,6 +91,9 @@ const productRequest = {
 				sessionToken,
 			},
 		});
+	},
+	updateProductActive: (id: number, body: { isActive: boolean }) => {
+		return http.patch<ProductResType>(`/products/${id}`, body, {});
 	},
 };
 

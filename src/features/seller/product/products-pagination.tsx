@@ -2,51 +2,102 @@
 import {
 	Pagination,
 	PaginationContent,
+	PaginationEllipsis,
 	PaginationItem,
+	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
 } from '@/components/ui/pagination';
-import { useSearchParams } from 'next/navigation';
 
-function ProductsPagination({ totalPages }: { totalPages: number }) {
-	const searchParams = useSearchParams();
-	const selectedPage = searchParams.get('page') || 1;
+interface ProductsPaginationProps {
+	totalPages: number;
+	currentPage?: number;
+	onPageChange?: (page: number) => void;
+}
 
-	const getURLSelectPage = (page: number) => {
-		const params = new URLSearchParams();
-		searchParams.forEach((value, key) => {
-			params.append(key, value);
-		});
-		params.set('page', page.toString());
-		return `?${params.toString()}`;
+function ProductsPagination({
+	totalPages,
+	currentPage = 1,
+	onPageChange
+}: ProductsPaginationProps) {
+	// No pagination needed if there's only one page or no pages
+	if (totalPages <= 1) return null;
+
+	const handlePageChange = (page: number) => {
+		if (onPageChange) {
+			onPageChange(page);
+		}
 	};
 
-	const getURLSelectNextPage = () => {
-		const params = new URLSearchParams();
-		searchParams.forEach((value, key) => {
-			params.append(key, value);
-		});
-		params.set('page', (parseInt(selectedPage as any) + 1).toString());
-		return `?${params.toString()}`;
+	// Create array of page numbers to display
+	const getPageNumbers = () => {
+		const pages: (number | 'ellipsis')[] = [];
+
+		// Always show first page
+		pages.push(1);
+
+		// Calculate range of pages to show around current page
+		const rangeStart = Math.max(2, currentPage - 1);
+		const rangeEnd = Math.min(totalPages - 1, currentPage + 1);
+
+		// Add ellipsis if there's a gap between 1 and rangeStart
+		if (rangeStart > 2) {
+			pages.push('ellipsis');
+		}
+
+		// Add pages in the range
+		for (let i = rangeStart; i <= rangeEnd; i++) {
+			pages.push(i);
+		}
+
+		// Add ellipsis if there's a gap between rangeEnd and totalPages
+		if (rangeEnd < totalPages - 1) {
+			pages.push('ellipsis');
+		}
+
+		// Always show last page if more than one page
+		if (totalPages > 1) {
+			pages.push(totalPages);
+		}
+
+		return pages;
 	};
 
-	const getURLSelectPreviousPage = () => {
-		const params = new URLSearchParams();
-		searchParams.forEach((value, key) => {
-			params.append(key, value);
-		});
-		params.set('page', (parseInt(selectedPage as any) - 1).toString());
-		return `?${params.toString()}`;
-	};
+	const pageNumbers = getPageNumbers();
 
 	return (
-		<Pagination>
+		<Pagination className="justify-center">
 			<PaginationContent>
 				<PaginationItem>
-					<PaginationPrevious href={getURLSelectPreviousPage()} />
+					<PaginationPrevious
+						className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+						onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+					/>
 				</PaginationItem>
+
+				{pageNumbers.map((page, index) => (
+					page === 'ellipsis' ? (
+						<PaginationItem key={`ellipsis-${index}`}>
+							<PaginationEllipsis />
+						</PaginationItem>
+					) : (
+						<PaginationItem key={page}>
+							<PaginationLink
+								className="cursor-pointer"
+								onClick={() => handlePageChange(page)}
+								isActive={page === currentPage}
+							>
+								{page}
+							</PaginationLink>
+						</PaginationItem>
+					)
+				))}
+
 				<PaginationItem>
-					<PaginationNext href={getURLSelectNextPage()} />
+					<PaginationNext
+						className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+						onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+					/>
 				</PaginationItem>
 			</PaginationContent>
 		</Pagination>

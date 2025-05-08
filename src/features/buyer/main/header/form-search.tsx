@@ -17,6 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Search } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+
 function FormSearch() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -37,27 +38,48 @@ function FormSearch() {
 		}
 
 		if (data.type === 'PRODUCT') {
-			router.push(`/buyer/products?${params.toString()}`);
+			console.log(params.toString());
+			router.replace(`/buyer/products?${params.toString()}`);
 		} else {
-			router.push(`/buyer/shop?${params.toString()}`);
+			router.replace(`/buyer/shop?${params.toString()}`);
 		}
-		router.refresh();
 	};
+
 	return (
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="flex flex-row justify-center items-center gap-1"
+				className="relative flex w-full max-w-[580px] rounded-lg overflow-hidden shadow-sm"
 			>
+				<div className="absolute left-0 top-0 bottom-0 flex items-center pl-3 text-gray-400">
+					<Search className="h-5 w-5" />
+				</div>
+
+				<FormField
+					control={form.control}
+					name="q"
+					render={({ field }) => (
+						<FormItem className="flex-1">
+							<FormControl>
+								<Input
+									className="pl-10 border-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 h-11"
+									placeholder="Tìm kiếm sản phẩm, danh mục, shop..."
+									{...field}
+								/>
+							</FormControl>
+						</FormItem>
+					)}
+				/>
+
 				<FormField
 					control={form.control}
 					name="type"
 					render={({ field }) => (
 						<FormItem>
 							<Select onValueChange={field.onChange} defaultValue={field.value}>
-								<FormControl className="w-32">
-									<SelectTrigger>
-										<SelectValue placeholder="Product" />
+								<FormControl>
+									<SelectTrigger className="w-[130px] border-0 rounded-none border-l border-l-gray-200 focus:ring-0">
+										<SelectValue placeholder="Loại" />
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
@@ -68,19 +90,12 @@ function FormSearch() {
 						</FormItem>
 					)}
 				/>
-				<FormField
-					control={form.control}
-					name="q"
-					render={({ field }) => (
-						<FormItem>
-							<FormControl className="w-96">
-								<Input placeholder="Nhập thông tin cần tìm" {...field} />
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-				<Button type="submit" variant="ghost" size="icon">
-					<Search className="font-gray bg-white" />
+
+				<Button
+					type="submit"
+					className="px-5 rounded-none bg-green-700 hover:bg-green-800"
+				>
+					Tìm
 				</Button>
 			</form>
 		</Form>

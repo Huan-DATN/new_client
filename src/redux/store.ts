@@ -1,11 +1,13 @@
 import currentProductReducer from '@/redux/currentProduct/currentProductReducer';
 import { configureStore } from '@reduxjs/toolkit';
 import planOrderReducer from './planOrder/planOrderReducer';
+import ratingProductReducer from './ratingProducts/ratingProductsReducer';
 
 export const store = configureStore({
 	reducer: {
 		currentProduct: currentProductReducer,
 		planOrder: planOrderReducer,
+		ratingProduct: ratingProductReducer,
 	},
 });
 

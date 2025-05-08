@@ -5,6 +5,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { jwtDecode } from 'jwt-decode';
 import { UseFormSetError } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
+import { OrderStatusEnum } from '../constants/orderStatusEnum';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -57,4 +58,11 @@ export const getDateFormat = (date: Date) => {
 		month: '2-digit',
 		day: '2-digit',
 	}).format(date);
+};
+
+export const checkCompletedOrder = (orderStatus: any[]) => {
+	const completedStatus = orderStatus.find(
+		(item: any) => item.status.type === OrderStatusEnum.DELIVERED
+	);
+	return completedStatus ? true : false;
 };

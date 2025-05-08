@@ -1,52 +1,67 @@
 'use client';
 import { CityListResType } from '@/schemaValidations/response/common';
-import { useSearchParams } from 'next/navigation';
+import { Check } from 'lucide-react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 function CityFilter({ data }: { data: CityListResType['data'] }) {
-	const params = useSearchParams();
-	const checkedCityId = params.get('cityId') || undefined;
-	const checkedGroupProductId = params.get('groupProductId') || undefined;
-	const checkedName = params.get('name') || undefined;
-	const checkedPage = params.get('page') || undefined;
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const checkedCityId = searchParams.get('cityId') || undefined;
+	const pathname = usePathname();
+
+	const handleCityChange = (cityId: string | undefined) => {
+		const params = new URLSearchParams(searchParams.toString());
+
+		// If clicking the already selected city, deselect it
+		if (cityId === checkedCityId) {
+			params.delete('cityId');
+		} else if (cityId) {
+			params.set('cityId', cityId);
+		} else {
+			params.delete('cityId');
+		}
+
+		// Remove page parameter to start at page 1
+		params.delete('page');
+
+		// Use replace with scroll: false to prevent the page from scrolling/reloading
+		router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+	};
 
 	return (
-		<div className="px-5">
-			<select
-				className="w-full p-2 border border-gray-300 rounded-md"
-				value={checkedCityId || ''}
-				onChange={(e) => {
-					const selectedCityId = e.target.value || undefined;
-					const query = {
-						cityId: selectedCityId,
-						groupProductId: checkedGroupProductId,
-						name: checkedName,
-					};
-					// Remove the cityId from the query if it's empty
-					if (!selectedCityId) {
-						delete query.cityId;
-					}
-					// Remove the groupProductId from the query if it's empty
-					if (!checkedGroupProductId) {
-						delete query.groupProductId;
-					}
-					// Remove the name from the query if it's empty
-					if (!checkedName) {
-						delete query.name;
-					}
-
-					const queryString = new URLSearchParams(
-						query as Record<string, string>
-					).toString();
-					window.location.href = `/buyer/products?${queryString}`;
-				}}
+		<div className="space-y-1 max-h-[300px] overflow-y-auto pr-1">
+			{/* All cities option */}
+			<div
+				className={`p-2 rounded-md cursor-pointer flex items-center ${
+					!checkedCityId ? 'bg-green-50 text-green-700' : 'hover:bg-gray-50'
+				}`}
+				onClick={() => handleCityChange(undefined)}
 			>
-				<option value="">Thành phố</option>
-				{data.map((item) => (
-					<option key={item.id} value={item.id}>
-						{item.name}
-					</option>
-				))}
-			</select>
+				<div className={`w-4 h-4 mr-2 rounded-sm flex items-center justify-center ${
+					!checkedCityId ? 'bg-green-600 text-white' : 'border border-gray-300'
+				}`}>
+					{!checkedCityId && <Check className="w-3 h-3" />}
+				</div>
+				<span className="text-sm">Tất cả</span>
+			</div>
+
+			{/* City list */}
+			{data.map((city) => (
+				<div
+					key={city.id}
+					className={`p-2 rounded-md cursor-pointer flex items-center ${
+						checkedCityId === city.id.toString() ? 'bg-green-50 text-green-700' : 'hover:bg-gray-50'
+					}`}
+					onClick={() => handleCityChange(city.id.toString())}
+				>
+					<div className={`w-4 h-4 mr-2 rounded-sm flex items-center justify-center ${
+						checkedCityId === city.id.toString() ? 'bg-green-600 text-white' : 'border border-gray-300'
+					}`}>
+						{checkedCityId === city.id.toString() && <Check className="w-3 h-3" />}
+					</div>
+					<span className="text-sm">{city.name}</span>
+				</div>
+			))}
 		</div>
 	);
 }

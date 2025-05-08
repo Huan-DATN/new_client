@@ -1,10 +1,24 @@
 import orderRequest from '@/api/orderRequest';
 import { Button } from '@/components/ui/button';
-import { getDateFormat, getPriceFormat } from '@/lib/utils';
+import OrderTimeLine from '@/features/components/order-timeline';
+import {
+	checkCompletedOrder,
+	getDateFormat,
+	getPriceFormat,
+} from '@/lib/utils';
+import { cookies } from 'next/headers';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
 import StatusComponent from '../../../../components/status-component';
+import { DialogDemo } from './ratings-dialog';
+
 async function OrderDetail({ id }: { id: number }) {
-	const { payload } = await orderRequest.getOrderDetail(id);
+	const respose = await orderRequest.getOrderDetail(id);
+	const { payload } = respose;
+	const sessionToken = (await cookies()).get('sessionToken')?.value;
+	if (!sessionToken) {
+		redirect('/auth/login');
+	}
 
 	return (
 		<div className="w-1/2 mx-auto p-6 shadow-md rounded-xl space-y-6">
@@ -20,16 +34,22 @@ async function OrderDetail({ id }: { id: number }) {
 					<p className="text-sm text-gray-500">Phương thức thanh toán: </p>
 					<p className="text-blue-500">{'COD'}</p>
 					<p className="text-sm text-gray-500">Trạng thái: </p>
-					<StatusComponent
-						status={
-							payload.data.OrderStatus[payload.data.OrderStatus.length - 1]
-								.status.type
-						}
-					/>
+					<StatusComponent status={payload.data.OrderStatus[0].status.type} />
 					<div>
 						<Button className="bg-red-300 text-sm mt-2 hover:bg-red-400 max-w-1/2!">
 							Hủy đơn
 						</Button>
+						{checkCompletedOrder(payload.data.OrderStatus) ? (
+							<DialogDemo
+								items={payload.data.items}
+								orderId={id}
+								sessionToken={sessionToken}
+							/>
+						) : (
+							<Button className="bg-gray-300 text-sm mt-2 hover:bg-gray-400 max-w-1/2!">
+								Đánh giá
+							</Button>
+						)}
 					</div>
 				</div>
 
@@ -37,13 +57,14 @@ async function OrderDetail({ id }: { id: number }) {
 				<div className="flex flex-1 gap-8">
 					<div>
 						<h3 className="font-semibold text-orange-700 mb-2">
-							THÔNG TIN NGƯỜI GỬI
+							THÔNG TIN NGƯỜI NHẬN
 						</h3>
 						<p>
-							<strong>Họ và tên:</strong> {payload.data.shop.shopName}
+							<strong>Họ và tên:</strong>{' '}
+							{payload.data.user.firstName + ' ' + payload.data.user.lastName}
 						</p>
 						<p>
-							<strong>Địa chỉ:</strong> {payload.data.shop.address}
+							<strong>Địa chỉ:</strong> {payload.data.addressLine}
 						</p>
 					</div>
 				</div>
@@ -84,17 +105,7 @@ async function OrderDetail({ id }: { id: number }) {
 				</p>
 			</div>
 
-			{/* Lịch sử đơn hàng */}
-			<div className="border-t pt-4">
-				<h4 className="font-semibold mb-2">Lịch sử đơn hàng</h4>
-				<ul className="space-y-1 text-sm">
-					{payload.data.OrderStatus.map((status) => (
-						<li key={status.id} className="text-sm mt-2">
-							{getDateFormat(new Date(status.createdAt))} - {status.status.name}
-						</li>
-					))}
-				</ul>
-			</div>
+			<OrderTimeLine id={payload.data.id} data={payload.data.OrderStatus} />
 		</div>
 	);
 }
