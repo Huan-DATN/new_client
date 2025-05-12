@@ -1,7 +1,7 @@
 {
 	"seller": {
 		"HomePage": {
-			"productSpotlight": "Product Spotlight",
+			"productsNewest": "Products Newest",
 			"showMore": "Show More"
 		}
 	}

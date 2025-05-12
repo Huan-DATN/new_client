@@ -1,52 +1,102 @@
 'use client';
 import {
-	Pagination,
-	PaginationContent,
-	PaginationItem,
-	PaginationNext,
-	PaginationPrevious,
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
 } from '@/components/ui/pagination';
 import { useSearchParams } from 'next/navigation';
 
 function OrdersPagination({ totalPages }: { totalPages: number }) {
 	const searchParams = useSearchParams();
-	const selectedPage = searchParams.get('page') || 1;
+	const currentPage = Number(searchParams.get('page') || '1');
 
-	const getURLSelectPage = (page: number) => {
-		const params = new URLSearchParams();
-		searchParams.forEach((value, key) => {
-			params.append(key, value);
-		});
-		params.set('page', page.toString());
+	// Create URL with updated page parameter
+	const createPageURL = (pageNumber: number) => {
+		const params = new URLSearchParams(searchParams.toString());
+		params.set('page', pageNumber.toString());
 		return `?${params.toString()}`;
 	};
 
-	const getURLSelectNextPage = () => {
-		const params = new URLSearchParams();
-		searchParams.forEach((value, key) => {
-			params.append(key, value);
-		});
-		params.set('page', (parseInt(selectedPage as any) + 1).toString());
-		return `?${params.toString()}`;
+	// Generate page numbers to display with ellipsis for large ranges
+	const getPageNumbers = () => {
+		const pageNumbers: (number | 'ellipsis')[] = [];
+
+		if (totalPages <= 7) {
+			// Less than 7 pages, show all
+			for (let i = 1; i <= totalPages; i++) {
+				pageNumbers.push(i);
+			}
+		} else {
+			// More than 7 pages, show with ellipsis
+			pageNumbers.push(1);
+
+			if (currentPage > 3) {
+				pageNumbers.push('ellipsis');
+			}
+
+			// Show current page and those around it
+			const start = Math.max(2, currentPage - 1);
+			const end = Math.min(totalPages - 1, currentPage + 1);
+
+			for (let i = start; i <= end; i++) {
+				pageNumbers.push(i);
+			}
+
+			if (currentPage < totalPages - 2) {
+				pageNumbers.push('ellipsis');
+			}
+
+			pageNumbers.push(totalPages);
+		}
+
+		return pageNumbers;
 	};
 
-	const getURLSelectPreviousPage = () => {
-		const params = new URLSearchParams();
-		searchParams.forEach((value, key) => {
-			params.append(key, value);
-		});
-		params.set('page', (parseInt(selectedPage as any) - 1).toString());
-		return `?${params.toString()}`;
-	};
+	if (totalPages <= 1) {
+		return null;
+	}
 
 	return (
 		<Pagination>
 			<PaginationContent>
+				{/* Previous button */}
 				<PaginationItem>
-					<PaginationPrevious href={getURLSelectPreviousPage()} />
+					<PaginationPrevious
+						href={createPageURL(Math.max(1, currentPage - 1))}
+						aria-disabled={currentPage === 1}
+						className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+					/>
 				</PaginationItem>
+
+				{/* Page numbers */}
+				{getPageNumbers().map((page, i) => (
+					page === 'ellipsis' ? (
+						<PaginationItem key={`ellipsis-${i}`}>
+							<PaginationEllipsis />
+						</PaginationItem>
+					) : (
+						<PaginationItem key={page}>
+							<PaginationLink
+								href={createPageURL(page)}
+								isActive={page === currentPage}
+							>
+								{page}
+							</PaginationLink>
+						</PaginationItem>
+					)
+				))}
+
+				{/* Next button */}
 				<PaginationItem>
-					<PaginationNext href={getURLSelectNextPage()} />
+					<PaginationNext
+						href={createPageURL(Math.min(totalPages, currentPage + 1))}
+						aria-disabled={currentPage === totalPages}
+						className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+					/>
 				</PaginationItem>
 			</PaginationContent>
 		</Pagination>

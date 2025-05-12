@@ -1,4 +1,5 @@
 import userRequest from '@/api/userRequest';
+import LogoutButton from '@/features/components/logout-button';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import FormProfile from './form-profile';
@@ -13,13 +14,16 @@ async function UpdateProfile() {
 
 	return (
 		<div>
-			<h1 className="text-2xl font-bold text-center mt-5">
-				Cập nhật thông tin cá nhân
-			</h1>
-
-			<div>
-				<FormProfile profile={res.payload.data} />
+			<div className="mb-6">
+				<h2 className="text-xl font-semibold">Thông tin cá nhân</h2>
+				<p className="text-sm text-gray-500 mt-1">
+					Quản lý thông tin cá nhân để bảo mật tài khoản
+				</p>
 			</div>
+
+			<FormProfile profile={res.payload.data} />
+
+			<LogoutButton />
 		</div>
 	);
 }

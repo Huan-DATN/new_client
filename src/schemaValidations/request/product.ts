@@ -9,6 +9,12 @@ export const SearchProductQuery = z
 	.passthrough();
 export type SearchProductQueryType = z.infer<typeof SearchProductQuery>;
 
+export const SortProductQuery = z.object({
+	sortBy: z.enum(['createdAt', 'price', 'name']).optional(),
+	sortOrder: z.enum(['asc', 'desc']).optional(),
+});
+export type SortProductQueryType = z.infer<typeof SortProductQuery>;
+
 export const CreateProductBody = z.object({
 	name: z.string().min(1, { message: 'Tên là bắt buộc' }),
 	description: z.string().min(1, { message: 'Mô tả là bắt buộc' }),

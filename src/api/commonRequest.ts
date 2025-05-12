@@ -5,6 +5,7 @@ import {
 	GroupProductsListResType,
 	StatusListResType,
 } from '../schemaValidations/response/common';
+import { ProductListResType } from '../schemaValidations/response/product';
 
 const commonRequest = {
 	getAllCities: () => {
@@ -18,6 +19,9 @@ const commonRequest = {
 	},
 	getAllStatus: () => {
 		return http.get<StatusListResType>('/common/status');
+	},
+	getProductsNewest: (take: number = 10) => {
+		return http.get<ProductListResType>(`/common/products/newest?take=${take}`);
 	},
 };
 

@@ -30,7 +30,7 @@ const items = [
 	},
 	{
 		title: 'Cài đặt',
-		url: '#',
+		url: '/seller/settings',
 		icon: Settings,
 	},
 ];

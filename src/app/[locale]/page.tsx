@@ -15,6 +15,8 @@ export default async function Home() {
 			redirect('/vi/buyer/');
 		} else if (role === 'SELLER') {
 			redirect('/vi/seller/');
+		} else if (role === 'ADMIN') {
+			redirect('/vi/admin/');
 		}
 	} else {
 		redirect('/vi/buyer/main');

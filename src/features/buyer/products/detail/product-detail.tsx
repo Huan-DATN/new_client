@@ -81,7 +81,7 @@ async function ProductDetail({ id }: { id: string }) {
 
 						<div className="flex items-center gap-2 mb-2">
 							<div className="flex">
-								{[...Array(5)].map((_, index) => (
+								{[...Array(4)].map((_, index) => (
 									<Star
 										key={index}
 										className={`h-5 w-5 ${index < data.star! ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
@@ -89,7 +89,7 @@ async function ProductDetail({ id }: { id: string }) {
 								))}
 							</div>
 							<span className="text-sm text-gray-500">
-								({data.star || 0})
+								({data.star || 0} sao)
 							</span>
 						</div>
 					</div>

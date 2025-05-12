@@ -1,43 +1,39 @@
+import { Button } from '@/components/ui/button';
+import { Eye } from 'lucide-react';
 import Link from 'next/link';
-import StatusComponent from '../../../components/status-component';
 import { getDateFormat, getPriceFormat } from '../../../lib/utils';
 import { OrderListResType } from '../../../schemaValidations/response/order';
+import OrderStatusBadge from '../order/[id]/order-status-badge';
 
 function OrderRow({ data }: { data: OrderListResType['data'][number] }) {
-	console.log(data);
+	// Get latest status
+	const latestStatus = data.OrderStatus[data.OrderStatus.length - 1]?.status || { id: 0, type: 'PENDING', name: 'Chờ xử lý' };
+
 	return (
-		<div className="w-full flex flex-row  border-b border-gray-300 py-4 gap-5">
-			<div className="flex-1">
-				<span className="font-semibold text-gray-400">Mã đơn hàng</span>
-				<p className="font-bold">#MH{data.id}</p>
+		<div className="grid grid-cols-5 items-center p-4 text-sm hover:bg-muted/30 transition-colors">
+			<div className="font-medium">
+				#MH{data.id}
 			</div>
 
-			<div className="flex-1">
-				<span className="font-semibold text-gray-400">Ngày đặt hàng</span>
-				<p className="font-bold">{getDateFormat(new Date(data.createdAt))}</p>
+			<div>
+				{getDateFormat(new Date(data.createdAt))}
 			</div>
 
-			<div className="flex-1">
-				<span className="font-semibold text-gray-400">Tổng tiền</span>
-				<p className="font-bold">{getPriceFormat(data.total)}</p>
+			<div className="font-medium">
+				{getPriceFormat(data.total)}
 			</div>
 
-			<div className="flex-1">
-				<span className="font-semibold text-gray-400">Trạng thái</span>
-				<p className="font-bold">
-					<StatusComponent status={data.OrderStatus[0].status.type} />
-				</p>
+			<div>
+				<OrderStatusBadge status={latestStatus} size="sm" />
 			</div>
 
-			<div className="flex-1 flex">
-				<div className="flex-1 justify-center items-center flex gap-2">
-					<Link
-						href={`/seller/order/${data.id}`}
-						className="text-blue-500 bg-white hover:bg-blue-500 hover:text-white border border-blue-500 rounded-md px-2"
-					>
-						Xem chi tiết
+			<div className="flex justify-center">
+				<Button asChild variant="ghost" size="sm" className="gap-1">
+					<Link href={`/seller/order/${data.id}`}>
+						<Eye className="h-4 w-4" />
+						<span>Chi tiết</span>
 					</Link>
-				</div>
+				</Button>
 			</div>
 		</div>
 	);

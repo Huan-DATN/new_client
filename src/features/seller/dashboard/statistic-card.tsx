@@ -3,7 +3,7 @@ function StatisticCard({
 }: {
 	card: {
 		title: string;
-		value: string;
+		value: any;
 		icon: JSX.Element;
 		borderColor: string;
 		bg: string;

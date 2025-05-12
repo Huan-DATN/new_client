@@ -1,5 +1,8 @@
 import { PaginationReqType } from '@/schemaValidations/common.schema';
-import { SearchProductQueryType } from '@/schemaValidations/request/product';
+import {
+	SearchProductQueryType,
+	SortProductQueryType,
+} from '@/schemaValidations/request/product';
 import {
 	ProductListResType,
 	ProductResType,
@@ -61,18 +64,37 @@ const productRequest = {
 	},
 	getListByMe: (
 		sessionToken: string,
-		{ page, limit }: PaginationReqType,
-		isActive?: boolean
+		pagination?: PaginationReqType,
+		sort?: SortProductQueryType,
+		search?: SearchProductQueryType
 	) => {
 		let url = `/products/me`;
 		const params = new URLSearchParams();
 
-		if (page) {
-			params.append('page', page.toString());
+		if (pagination) {
+			if (pagination.page) {
+				params.append('page', pagination.page.toString());
+			}
+
+			if (pagination.limit) {
+				params.append('limit', pagination.limit.toString());
+			}
 		}
 
-		if (limit) {
-			params.append('limit', limit.toString());
+		if (sort) {
+			if (sort.sortBy) {
+				params.append('sortBy', sort.sortBy);
+			}
+
+			if (sort.sortOrder) {
+				params.append('sortOrder', sort.sortOrder);
+			}
+		}
+
+		if (search) {
+			if (search.name) {
+				params.append('name', search.name);
+			}
 		}
 
 		if (params.toString()) {
@@ -94,6 +116,53 @@ const productRequest = {
 	},
 	updateProductActive: (id: number, body: { isActive: boolean }) => {
 		return http.patch<ProductResType>(`/products/${id}`, body, {});
+	},
+	update: (id: number, body: any) => {
+		return http.put<ProductResType>(`/products/${id}`, body, {});
+	},
+	getListByAdmin: (
+		sessionToken: string,
+		pagination?: PaginationReqType,
+		sort?: SortProductQueryType,
+		search?: SearchProductQueryType
+	) => {
+		let url = `/products/admin`;
+		const params = new URLSearchParams();
+
+		if (pagination) {
+			if (pagination.page) {
+				params.append('page', pagination.page.toString());
+			}
+
+			if (pagination.limit) {
+				params.append('limit', pagination.limit.toString());
+			}
+		}
+
+		if (sort) {
+			if (sort.sortBy) {
+				params.append('sortBy', sort.sortBy);
+			}
+
+			if (sort.sortOrder) {
+				params.append('sortOrder', sort.sortOrder);
+			}
+		}
+
+		if (search) {
+			if (search.name) {
+				params.append('name', search.name);
+			}
+		}
+
+		if (params.toString()) {
+			url += `?${params.toString()}`;
+		}
+
+		console.log(url);
+		return http.get<ProductListResType>(url, {
+			headers: { Authorization: `Bearer ${sessionToken}` },
+		});
 	},
 };
 

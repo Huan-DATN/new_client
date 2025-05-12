@@ -1,7 +1,7 @@
 import http from '../lib/http';
 import { UpdateBuyerMeBodyType } from '../schemaValidations/request/account';
 import { AccountResType } from '../schemaValidations/response/account';
-import { ShopsListResType } from '../schemaValidations/response/user';
+import { ShopResType, ShopsListResType } from '../schemaValidations/response/user';
 
 const userRequest = {
 	getMe: (sessionToken: string) => {
@@ -38,6 +38,9 @@ const userRequest = {
 		}
 		console.log('url', url);
 		return http.get<ShopsListResType>(url);
+	},
+	getShopById: (id: number) => {
+		return http.get<ShopResType>(`/user/${id}`);
 	},
 };
 

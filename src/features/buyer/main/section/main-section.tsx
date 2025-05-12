@@ -44,7 +44,7 @@ async function MainSection() {
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex items-center justify-between mb-6">
 						<h2 className="text-2xl font-bold text-green-800">
-							{t('productSpotlight')}
+							{t('productsNewest')}
 						</h2>
 						<Link href="/buyer/products">
 							<Button variant="ghost" className="text-green-700 font-medium">
