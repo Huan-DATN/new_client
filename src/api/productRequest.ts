@@ -95,6 +95,11 @@ const productRequest = {
 			if (search.name) {
 				params.append('name', search.name);
 			}
+
+			if (search.isActive !== undefined) {
+				console.log(search.isActive);
+				params.append('isActive', search.isActive.toString());
+			}
 		}
 
 		if (params.toString()) {
@@ -152,6 +157,10 @@ const productRequest = {
 		if (search) {
 			if (search.name) {
 				params.append('name', search.name);
+			}
+
+			if (search.isActive !== undefined) {
+				params.append('isActive', search.isActive.toString());
 			}
 		}
 

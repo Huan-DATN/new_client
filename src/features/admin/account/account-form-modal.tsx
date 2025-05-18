@@ -28,11 +28,13 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { UserSchema } from '@/schemaValidations/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Camera, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Account, AccountFormValues, accountFormSchema } from './schemas';
+import { z } from 'zod';
+import { AccountFormValues, accountFormSchema } from './schemas';
 
 interface AccountFormModalProps {
 	account?: Account | null;
@@ -41,6 +43,8 @@ interface AccountFormModalProps {
 	onSubmit: (data: AccountFormValues) => void;
 	isSubmitting?: boolean;
 }
+
+type Account = z.infer<typeof UserSchema>;
 
 function AccountFormModal({
 	account,

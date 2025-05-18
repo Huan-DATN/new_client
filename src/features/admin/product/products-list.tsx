@@ -10,7 +10,13 @@ import ProductCard from './product-card';
 import ProductRow from './product-row';
 import ProductsPagination from './products-pagination';
 
-function ProductsList({ sessionToken }: { sessionToken: string }) {
+function ProductsList({
+	sessionToken,
+	isActive = undefined,
+}: {
+	sessionToken: string;
+	isActive?: boolean;
+}) {
 	const router = useRouter();
 	const params = useSearchParams();
 	const page = Number(params.get('page') || 1);
@@ -44,6 +50,7 @@ function ProductsList({ sessionToken }: { sessionToken: string }) {
 					},
 					{
 						name,
+						isActive,
 					}
 				);
 

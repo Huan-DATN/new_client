@@ -12,8 +12,10 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import { UserSchema } from '@/schemaValidations/schema';
 import { Calendar, Mail, MapPin, Phone, User } from 'lucide-react';
-import { Account } from './schemas';
+import { z } from 'zod';
+import { getDateFormat } from '../../../lib/utils';
 
 interface AccountDetailModalProps {
 	account: Account | null;
@@ -21,23 +23,14 @@ interface AccountDetailModalProps {
 	onClose: () => void;
 }
 
+type Account = z.infer<typeof UserSchema>;
+
 function AccountDetailModal({
 	account,
 	isOpen,
 	onClose,
 }: AccountDetailModalProps) {
 	if (!account) return null;
-
-	const formatDate = (dateString: string) => {
-		const date = new Date(dateString);
-		return new Intl.DateTimeFormat('vi-VN', {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit',
-		}).format(date);
-	};
 
 	const getRoleBadge = (role: string) => {
 		switch (role) {
@@ -88,7 +81,9 @@ function AccountDetailModal({
 		<Dialog open={isOpen} onOpenChange={onClose}>
 			<DialogContent className="sm:max-w-[500px]">
 				<DialogHeader>
-					<DialogTitle>Chi tiết tài khoản</DialogTitle>
+					<DialogTitle>
+						{account.firstName} {account.lastName}
+					</DialogTitle>
 					<DialogDescription>
 						Thông tin chi tiết của tài khoản #{account.id}
 					</DialogDescription>
@@ -149,7 +144,7 @@ function AccountDetailModal({
 						<Calendar className="h-4 w-4 mr-2 text-gray-500" />
 						<span className="text-sm font-medium">Ngày tạo:</span>
 						<span className="text-sm ml-2">
-							{formatDate(account.createdAt)}
+							{getDateFormat(account.createdAt)}
 						</span>
 					</div>
 
@@ -157,7 +152,7 @@ function AccountDetailModal({
 						<Calendar className="h-4 w-4 mr-2 text-gray-500" />
 						<span className="text-sm font-medium">Cập nhật:</span>
 						<span className="text-sm ml-2">
-							{formatDate(account.updatedAt)}
+							{getDateFormat(account.updatedAt)}
 						</span>
 					</div>
 				</div>

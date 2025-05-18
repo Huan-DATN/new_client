@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UserSchema } from '../schema';
 
 export const ShopsListRes = z.object({
 	data: z.array(
@@ -45,3 +46,13 @@ export const ShopRes = z.object({
 });
 
 export type ShopResType = z.TypeOf<typeof ShopRes>;
+
+export const UserListRes = z.object({
+	data: z.array(UserSchema),
+	meta: z.object({
+		total: z.number(),
+		totalPages: z.number(),
+	}),
+});
+
+export type UserListResType = z.TypeOf<typeof UserListRes>;

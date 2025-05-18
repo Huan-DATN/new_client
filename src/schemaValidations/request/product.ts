@@ -5,6 +5,7 @@ export const SearchProductQuery = z
 		name: z.string().optional(),
 		groupProductId: z.coerce.number().optional(),
 		cityId: z.coerce.number().optional(),
+		isActive: z.boolean().optional(),
 	})
 	.passthrough();
 export type SearchProductQueryType = z.infer<typeof SearchProductQuery>;

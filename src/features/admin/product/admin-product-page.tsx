@@ -24,8 +24,7 @@ async function AdminProductPage() {
 							Quản lý sản phẩm
 						</h1>
 						<p className="text-gray-500 mt-1">
-							Quản lý danh sách sản phẩm, kiểm soát kho hàng và theo dõi trạng
-							thái bán hàng
+							Quản lý danh sách sản phẩm trong hệ thống
 						</p>
 					</div>
 
@@ -51,9 +50,6 @@ async function AdminProductPage() {
 						<TabsTrigger value="inactive" className="rounded-md">
 							Đã ẩn
 						</TabsTrigger>
-						<TabsTrigger value="low-stock" className="rounded-md">
-							Sắp hết hàng
-						</TabsTrigger>
 					</TabsList>
 
 					<div className="relative w-full sm:w-auto">
@@ -76,35 +72,30 @@ async function AdminProductPage() {
 				</TabsContent>
 
 				<TabsContent value="active">
-					<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-						<h3 className="text-lg font-medium text-gray-700">
-							Sản phẩm đang bán
-						</h3>
-						<p className="text-gray-500 mt-2">
-							Chế độ xem này sẽ hiển thị các sản phẩm đang được bán.
-						</p>
+					<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+						<div className="border-b border-gray-200 bg-gray-50 px-4 py-3 flex justify-between items-center">
+							<h2 className="font-medium text-gray-700">Sản phẩm đang bán</h2>
+							<div className="flex items-center gap-2">
+								<OrderBox />
+							</div>
+						</div>
+						<div className="p-4">
+							<ProductsList sessionToken={sessionToken} isActive={true} />
+						</div>
 					</div>
 				</TabsContent>
 
 				<TabsContent value="inactive">
-					<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-						<h3 className="text-lg font-medium text-gray-700">
-							Sản phẩm đã ẩn
-						</h3>
-						<p className="text-gray-500 mt-2">
-							Chế độ xem này sẽ hiển thị các sản phẩm đã ẩn.
-						</p>
-					</div>
-				</TabsContent>
-
-				<TabsContent value="low-stock">
-					<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-						<h3 className="text-lg font-medium text-gray-700">
-							Sản phẩm sắp hết hàng
-						</h3>
-						<p className="text-gray-500 mt-2">
-							Chế độ xem này sẽ hiển thị các sản phẩm có số lượng thấp.
-						</p>
+					<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+						<div className="border-b border-gray-200 bg-gray-50 px-4 py-3 flex justify-between items-center">
+							<h2 className="font-medium text-gray-700">Sản phẩm đã ẩn</h2>
+							<div className="flex items-center gap-2">
+								<OrderBox />
+							</div>
+						</div>
+						<div className="p-4">
+							<ProductsList sessionToken={sessionToken} isActive={false} />
+						</div>
 					</div>
 				</TabsContent>
 			</Tabs>

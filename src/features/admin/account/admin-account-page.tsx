@@ -13,17 +13,9 @@ async function AdminAccountPage() {
 	// const { payload: { data } } = await userRequest.getAdminUsersList(sessionToken);
 
 	// For now, we'll use mock data until the API is implemented
-	const mockData = {
-		users: [],
-		pagination: {
-			total: 0,
-			page: 1,
-			limit: 10,
-			totalPages: 1,
-		},
-	};
+	
 
-	return <AdminAccount sessionToken={sessionToken} data={mockData} />;
+	return <AdminAccount sessionToken={sessionToken} />;
 }
 
 export default AdminAccountPage;

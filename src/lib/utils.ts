@@ -52,12 +52,13 @@ export const getPriceFormat = (price: number) =>
 		price
 	);
 
-export const getDateFormat = (date: Date) => {
+export const getDateFormat = (date: Date | string) => {
+	const dateObj = new Date(date);
 	return new Intl.DateTimeFormat('vi-VN', {
 		year: 'numeric',
 		month: '2-digit',
 		day: '2-digit',
-	}).format(date);
+	}).format(dateObj);
 };
 
 export const checkCompletedOrder = (orderStatus: any[]) => {

@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Users } from 'lucide-react';
+import { Calendar, Home, Inbox, Settings, Users } from 'lucide-react';
 
 import {
 	Sidebar,
@@ -32,6 +32,11 @@ const items = [
 		title: 'Tài khoản',
 		url: '/admin/account',
 		icon: Users,
+	},
+	{
+		title: 'Cài đặt',
+		url: '/admin/settings',
+		icon: Settings,
 	},
 ];
 

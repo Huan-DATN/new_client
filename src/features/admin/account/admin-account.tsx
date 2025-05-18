@@ -1,91 +1,55 @@
 'use client';
 
+import userRequest from '@/api/userRequest';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { handleErrorApi } from '@/lib/utils';
+import { UserListResType } from '@/schemaValidations/response/user';
 import { Filter, RefreshCw, UserPlus, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { z } from 'zod';
+import { RoleEnum } from '../../../constants/roleEnum';
+import { UserSchema } from '../../../schemaValidations/schema';
 import AccountFormModal from './account-form-modal';
 import AccountsList from './accounts-list';
 import InputSearch from './input-search';
-import { Account, AccountFormValues, AccountsData } from './schemas';
+import { AccountFormValues } from './schemas';
 
-function AdminAccount({
-	sessionToken,
-	data,
-}: {
-	sessionToken: string;
-	data: AccountsData;
-}) {
+type Account = z.infer<typeof UserSchema>;
+
+function AdminAccount({ sessionToken }: { sessionToken: string }) {
 	const [isMounted, setIsMounted] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	const [accounts, setAccounts] = useState<Account[]>([]);
+	const [accounts, setAccounts] = useState<UserListResType['data']>([]);
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [role, setRole] = useState<RoleEnum | undefined>(undefined);
+	const [isActive, setIsActive] = useState<boolean | undefined>(undefined);
 
 	const { toast } = useToast();
 
 	useEffect(() => {
 		setIsMounted(true);
 
-		// Mock data for demonstration
-		const mockAccounts = [
-			{
-				id: 1,
-				firstName: 'Admin',
-				lastName: 'User',
-				email: 'admin@example.com',
-				phone: '+84123456789',
-				address: 'Hà Nội, Việt Nam',
-				role: 'ADMIN',
-				isActive: true,
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString(),
-				image: null,
-			},
-			{
-				id: 2,
-				firstName: 'John',
-				lastName: 'Seller',
-				email: 'seller@example.com',
-				phone: '+84987654321',
-				address: 'Hồ Chí Minh, Việt Nam',
-				role: 'SELLER',
-				isActive: true,
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString(),
-				image: null,
-			},
-			{
-				id: 3,
-				firstName: 'Alice',
-				lastName: 'Buyer',
-				email: 'buyer@example.com',
-				phone: '+84555555555',
-				address: 'Đà Nẵng, Việt Nam',
-				role: 'BUYER',
-				isActive: true,
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString(),
-				image: null,
-			},
-			{
-				id: 4,
-				firstName: 'Inactive',
-				lastName: 'User',
-				email: 'inactive@example.com',
-				phone: null,
-				address: null,
-				role: 'BUYER',
-				isActive: false,
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString(),
-				image: null,
-			},
-		];
+		const fetchData = async () => {
+			try {
+				const response = await userRequest.getAllUsers(
+					sessionToken,
+					isActive,
+					role
+				);
 
-		setAccounts(mockAccounts);
-	}, []);
+				setAccounts(response.payload.data);
+			} catch (error) {
+				handleErrorApi({
+					error,
+				});
+			}
+		};
+
+		fetchData();
+	}, [accounts, isActive, role]);
 
 	// If not mounted yet (during SSR), show a simplified version to avoid hydration errors
 	if (!isMounted) {
@@ -128,9 +92,10 @@ function AdminAccount({
 				address: data.address || null,
 				role: data.role,
 				isActive: data.isActive,
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString(),
 				image: null,
+				password: '',
+				createdAt: new Date(),
+				updatedAt: new Date(),
 			};
 
 			setAccounts([newAccount, ...accounts]);
@@ -180,20 +145,54 @@ function AdminAccount({
 			<Tabs defaultValue="all" className="w-full">
 				<div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
 					<TabsList className="bg-muted h-10">
-						<TabsTrigger value="all" className="rounded-md">
+						<TabsTrigger
+							value="all"
+							className="rounded-md"
+							onClick={() => {
+								setRole(undefined);
+								setIsActive(undefined);
+							}}
+						>
 							Tất cả tài khoản
 						</TabsTrigger>
-						<TabsTrigger value="admin" className="rounded-md">
+						<TabsTrigger
+							value="admin"
+							className="rounded-md"
+							onClick={() => {
+								setRole(RoleEnum.ADMIN);
+								setIsActive(undefined);
+							}}
+						>
 							Quản trị viên
 						</TabsTrigger>
-						<TabsTrigger value="seller" className="rounded-md">
+						<TabsTrigger
+							value="seller"
+							className="rounded-md"
+							onClick={() => {
+								setRole(RoleEnum.SELLER);
+								setIsActive(undefined);
+							}}
+						>
 							Cửa hàng
 						</TabsTrigger>
-						<TabsTrigger value="buyer" className="rounded-md">
+						<TabsTrigger
+							value="buyer"
+							className="rounded-md"
+							onClick={() => {
+								setRole(RoleEnum.BUYER);
+								setIsActive(undefined);
+							}}
+						>
 							Người mua
 						</TabsTrigger>
-						<TabsTrigger value="inactive" className="rounded-md">
-							Đã vô hiệu
+						<TabsTrigger
+							value="inactive"
+							className="rounded-md"
+							onClick={() => {
+								setIsActive(false);
+							}}
+						>
+							Tài khoản đã vô hiệu
 						</TabsTrigger>
 					</TabsList>
 
@@ -220,19 +219,10 @@ function AdminAccount({
 					<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
 						<div className="border-b border-gray-200 bg-gray-50 px-4 py-3 flex justify-between items-center">
 							<h2 className="font-medium text-gray-700">Quản trị viên</h2>
-							<div className="text-sm text-gray-500">
-								Tổng số:{' '}
-								{accounts.filter((account) => account.role === 'ADMIN').length}{' '}
-								tài khoản
-							</div>
+							<div className="text-sm text-gray-500">Tổng số: tài khoản</div>
 						</div>
 						<div className="p-4">
-							<AccountsList
-								accounts={accounts.filter(
-									(account) => account.role === 'ADMIN'
-								)}
-								sessionToken={sessionToken}
-							/>
+							<AccountsList accounts={accounts} sessionToken={sessionToken} />
 						</div>
 					</div>
 				</TabsContent>
@@ -241,19 +231,10 @@ function AdminAccount({
 					<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
 						<div className="border-b border-gray-200 bg-gray-50 px-4 py-3 flex justify-between items-center">
 							<h2 className="font-medium text-gray-700">Cửa hàng</h2>
-							<div className="text-sm text-gray-500">
-								Tổng số:{' '}
-								{accounts.filter((account) => account.role === 'SELLER').length}{' '}
-								tài khoản
-							</div>
+							<div className="text-sm text-gray-500">Tổng số: tài khoản</div>
 						</div>
 						<div className="p-4">
-							<AccountsList
-								accounts={accounts.filter(
-									(account) => account.role === 'SELLER'
-								)}
-								sessionToken={sessionToken}
-							/>
+							<AccountsList accounts={accounts} sessionToken={sessionToken} />
 						</div>
 					</div>
 				</TabsContent>
@@ -262,19 +243,10 @@ function AdminAccount({
 					<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
 						<div className="border-b border-gray-200 bg-gray-50 px-4 py-3 flex justify-between items-center">
 							<h2 className="font-medium text-gray-700">Người mua</h2>
-							<div className="text-sm text-gray-500">
-								Tổng số:{' '}
-								{accounts.filter((account) => account.role === 'BUYER').length}{' '}
-								tài khoản
-							</div>
+							<div className="text-sm text-gray-500">Tổng số: tài khoản</div>
 						</div>
 						<div className="p-4">
-							<AccountsList
-								accounts={accounts.filter(
-									(account) => account.role === 'BUYER'
-								)}
-								sessionToken={sessionToken}
-							/>
+							<AccountsList accounts={accounts} sessionToken={sessionToken} />
 						</div>
 					</div>
 				</TabsContent>
@@ -285,17 +257,10 @@ function AdminAccount({
 							<h2 className="font-medium text-gray-700">
 								Tài khoản đã vô hiệu
 							</h2>
-							<div className="text-sm text-gray-500">
-								Tổng số:{' '}
-								{accounts.filter((account) => !account.isActive).length} tài
-								khoản
-							</div>
+							<div className="text-sm text-gray-500">Tổng số: tài khoản</div>
 						</div>
 						<div className="p-4">
-							<AccountsList
-								accounts={accounts.filter((account) => !account.isActive)}
-								sessionToken={sessionToken}
-							/>
+							<AccountsList accounts={accounts} sessionToken={sessionToken} />
 						</div>
 					</div>
 				</TabsContent>

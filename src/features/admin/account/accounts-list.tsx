@@ -10,11 +10,17 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
+import { UserSchema } from '@/schemaValidations/schema';
 import { Ban, Edit, EyeIcon, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { z } from 'zod';
+import { RoleEnum } from '../../../constants/roleEnum';
+import { getDateFormat } from '../../../lib/utils';
 import AccountDetailModal from './account-detail-modal';
 import AccountFormModal from './account-form-modal';
-import { Account, AccountFormValues } from './schemas';
+import { AccountFormValues } from './schemas';
+
+type Account = z.infer<typeof UserSchema>;
 
 function AccountsList({
 	accounts,
@@ -71,19 +77,19 @@ function AccountsList({
 
 	const getRoleBadge = (role: string) => {
 		switch (role) {
-			case 'ADMIN':
+			case RoleEnum.ADMIN:
 				return (
 					<Badge className="bg-purple-100 text-purple-800 border-purple-200">
 						Quản trị viên
 					</Badge>
 				);
-			case 'SELLER':
+			case RoleEnum.SELLER:
 				return (
 					<Badge className="bg-blue-100 text-blue-800 border-blue-200">
 						Cửa hàng
 					</Badge>
 				);
-			case 'BUYER':
+			case RoleEnum.BUYER:
 				return (
 					<Badge className="bg-green-100 text-green-800 border-green-200">
 						Người mua
@@ -112,17 +118,6 @@ function AccountsList({
 				</Badge>
 			);
 		}
-	};
-
-	const formatDate = (dateString: string) => {
-		const date = new Date(dateString);
-		return new Intl.DateTimeFormat('vi-VN', {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit',
-		}).format(date);
 	};
 
 	if (accounts.length === 0) {
@@ -197,7 +192,7 @@ function AccountsList({
 									{getStatusBadge(account.isActive)}
 								</td>
 								<td className="px-4 py-3 text-sm text-gray-500">
-									{formatDate(account.createdAt)}
+									{getDateFormat(account.createdAt)}
 								</td>
 								<td className="px-4 py-3 text-sm">
 									<DropdownMenu>

@@ -1,7 +1,12 @@
+import { RoleEnum } from '../constants/roleEnum';
 import http from '../lib/http';
 import { UpdateBuyerMeBodyType } from '../schemaValidations/request/account';
 import { AccountResType } from '../schemaValidations/response/account';
-import { ShopResType, ShopsListResType } from '../schemaValidations/response/user';
+import {
+	ShopResType,
+	ShopsListResType,
+	UserListResType,
+} from '../schemaValidations/response/user';
 
 const userRequest = {
 	getMe: (sessionToken: string) => {
@@ -41,6 +46,31 @@ const userRequest = {
 	},
 	getShopById: (id: number) => {
 		return http.get<ShopResType>(`/user/${id}`);
+	},
+	getAllUsers: (
+		sessionToken: string,
+		isActive: boolean | undefined = undefined,
+		role: RoleEnum | undefined = undefined
+	) => {
+		let url = `/user`;
+		const params = new URLSearchParams();
+
+		if (isActive !== undefined) {
+			params.append('isActive', isActive.toString());
+		}
+
+		if (role !== undefined) {
+			params.append('role', role);
+		}
+
+		if (params.toString()) {
+			url += `?${params.toString()}`;
+		}
+		return http.get<UserListResType>(url, {
+			headers: {
+				Authorization: `Bearer ${sessionToken}`,
+			},
+		});
 	},
 };
 
