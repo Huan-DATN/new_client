@@ -10,12 +10,16 @@ import Link from 'next/link';
 function OrderCard({ data }: { data: OrderListResType['data'][number] }) {
 	// Determine action button based on order status
 	const renderActionButton = () => {
-		const status = data.OrderStatus[0].status.type;
+		const status = data.OrderStatus[data.OrderStatus.length - 1].status.type;
 
-		switch(status) {
+		switch (status) {
 			case 'DELIVERED':
 				return (
-					<Button variant="outline" size="sm" className="text-green-600 border-green-600 hover:bg-green-50">
+					<Button
+						variant="outline"
+						size="sm"
+						className="text-green-600 border-green-600 hover:bg-green-50"
+					>
 						Mua lại
 					</Button>
 				);
@@ -23,13 +27,21 @@ function OrderCard({ data }: { data: OrderListResType['data'][number] }) {
 				return null;
 			case 'SHIPPED':
 				return (
-					<Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-50">
+					<Button
+						variant="outline"
+						size="sm"
+						className="text-blue-600 border-blue-600 hover:bg-blue-50"
+					>
 						Xác nhận nhận hàng
 					</Button>
 				);
 			default:
 				return (
-					<Button variant="outline" size="sm" className="text-red-600 border-red-600 hover:bg-red-50">
+					<Button
+						variant="outline"
+						size="sm"
+						className="text-red-600 border-red-600 hover:bg-red-50"
+					>
 						Hủy đơn hàng
 					</Button>
 				);
@@ -42,8 +54,12 @@ function OrderCard({ data }: { data: OrderListResType['data'][number] }) {
 			<div className="bg-gray-50 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
 				<div className="flex items-center gap-3">
 					<Package className="text-gray-500" size={18} />
-					<span className="font-semibold text-gray-800">Đơn hàng #{data.id}</span>
-					<StatusComponent status={data.OrderStatus[0].status.type} />
+					<span className="font-semibold text-gray-800">
+						Đơn hàng #{data.id}
+					</span>
+					<StatusComponent
+						status={data.OrderStatus[data.OrderStatus.length - 1].status.type}
+					/>
 				</div>
 
 				<div className="flex items-center gap-4 text-sm text-gray-500">
@@ -68,14 +84,16 @@ function OrderCard({ data }: { data: OrderListResType['data'][number] }) {
 									item.product?.images[0]?.publicUrl ??
 									'https://placehold.co/200x150/png'
 								}
-								alt={item.product?.name || "Product image"}
+								alt={item.product?.name || 'Product image'}
 								fill
 								className="object-cover"
 							/>
 						</div>
 
 						<div className="flex-grow min-w-0">
-							<h3 className="text-base font-medium truncate">{item.product?.name}</h3>
+							<h3 className="text-base font-medium truncate">
+								{item.product?.name}
+							</h3>
 							<p className="text-sm text-gray-500">
 								{getPriceFormat(item.unitPrice)} x {item.quantity}
 							</p>
@@ -92,11 +110,14 @@ function OrderCard({ data }: { data: OrderListResType['data'][number] }) {
 			<div className="bg-gray-50 p-4">
 				<div className="flex justify-between items-center">
 					<div className="text-sm text-gray-500">
-						{data.items.length} {data.items.length > 1 ? 'sản phẩm' : 'sản phẩm'}
+						{data.items.length}{' '}
+						{data.items.length > 1 ? 'sản phẩm' : 'sản phẩm'}
 					</div>
 					<div className="text-right">
 						<div className="text-sm text-gray-500">Tổng thanh toán:</div>
-						<div className="text-lg font-bold text-green-600">{getPriceFormat(data.total)}</div>
+						<div className="text-lg font-bold text-green-600">
+							{getPriceFormat(data.total)}
+						</div>
 					</div>
 				</div>
 

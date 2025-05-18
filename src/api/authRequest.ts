@@ -53,6 +53,8 @@ const authRequest = {
 			{},
 			{ baseUrl: '' }
 		),
+	register: (body: UserRegisterBodyType | SellerRegisterBodyType) =>
+		http.post<RegisterResType>('/auth/register', body),
 };
 
 export default authRequest;

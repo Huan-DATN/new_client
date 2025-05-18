@@ -1,5 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, ShoppingBag } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Package, ShoppingBag } from 'lucide-react';
 import { cookies } from 'next/headers';
 import orderRequest from '../../../../api/orderRequest';
 import OrderCard from './order-card';
@@ -11,8 +11,12 @@ async function OrdersPage() {
 			<div className="container mx-auto p-8 text-center">
 				<div className="bg-gray-50 rounded-lg p-8 shadow-sm border">
 					<ShoppingBag size={48} className="mx-auto text-gray-400 mb-4" />
-					<h2 className="text-xl font-medium text-gray-700 mb-2">Vui lòng đăng nhập để xem đơn hàng</h2>
-					<p className="text-gray-500">Đăng nhập để xem và quản lý tất cả đơn hàng của bạn</p>
+					<h2 className="text-xl font-medium text-gray-700 mb-2">
+						Vui lòng đăng nhập để xem đơn hàng
+					</h2>
+					<p className="text-gray-500">
+						Đăng nhập để xem và quản lý tất cả đơn hàng của bạn
+					</p>
 				</div>
 			</div>
 		);
@@ -22,18 +26,26 @@ async function OrdersPage() {
 	const orders = response.payload.data;
 
 	// Group orders by status
-	const pendingOrders = orders.filter(order =>
-		order.OrderStatus[0].status.type === 'PENDING' ||
-		order.OrderStatus[0].status.type === 'PROCESSING'
+	const pendingOrders = orders.filter(
+		(order) =>
+			order.OrderStatus[order.OrderStatus.length - 1].status.type ===
+				'PENDING' ||
+			order.OrderStatus[order.OrderStatus.length - 1].status.type ===
+				'PROCESSING'
 	);
-	const shippingOrders = orders.filter(order =>
-		order.OrderStatus[0].status.type === 'SHIPPED'
+	const shippingOrders = orders.filter(
+		(order) =>
+			order.OrderStatus[order.OrderStatus.length - 1].status.type === 'SHIPPED'
 	);
-	const completedOrders = orders.filter(order =>
-		order.OrderStatus[0].status.type === 'DELIVERED'
+	const completedOrders = orders.filter(
+		(order) =>
+			order.OrderStatus[order.OrderStatus.length - 1].status.type ===
+			'DELIVERED'
 	);
-	const cancelledOrders = orders.filter(order =>
-		order.OrderStatus[0].status.type === 'CANCELLED'
+	const cancelledOrders = orders.filter(
+		(order) =>
+			order.OrderStatus[order.OrderStatus.length - 1].status.type ===
+			'CANCELLED'
 	);
 
 	return (
@@ -46,17 +58,23 @@ async function OrdersPage() {
 			<Tabs defaultValue="all" className="w-full">
 				<TabsList className="grid grid-cols-5 mb-6">
 					<TabsTrigger value="all">Tất cả ({orders.length})</TabsTrigger>
-					<TabsTrigger value="pending">Chờ xử lý ({pendingOrders.length})</TabsTrigger>
-					<TabsTrigger value="shipping">Đang giao ({shippingOrders.length})</TabsTrigger>
-					<TabsTrigger value="completed">Hoàn thành ({completedOrders.length})</TabsTrigger>
-					<TabsTrigger value="cancelled">Đã hủy ({cancelledOrders.length})</TabsTrigger>
+					<TabsTrigger value="pending">
+						Chờ xử lý ({pendingOrders.length})
+					</TabsTrigger>
+					<TabsTrigger value="shipping">
+						Đang giao ({shippingOrders.length})
+					</TabsTrigger>
+					<TabsTrigger value="completed">
+						Hoàn thành ({completedOrders.length})
+					</TabsTrigger>
+					<TabsTrigger value="cancelled">
+						Đã hủy ({cancelledOrders.length})
+					</TabsTrigger>
 				</TabsList>
 
 				<TabsContent value="all" className="space-y-4">
 					{orders.length > 0 ? (
-						orders.map((order) => (
-							<OrderCard key={order.id} data={order} />
-						))
+						orders.map((order) => <OrderCard key={order.id} data={order} />)
 					) : (
 						<EmptyOrderState message="Bạn chưa có đơn hàng nào" />
 					)}

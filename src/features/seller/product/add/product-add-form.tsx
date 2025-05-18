@@ -46,7 +46,7 @@ import {
 	PackageCheck,
 	Tag,
 	Upload,
-	X
+	X,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -81,6 +81,7 @@ const ProductAddForm = ({
 			categories: [],
 			imageUrls: [],
 			isActive: true,
+			star: 0,
 			cityId: citiesData[0]?.id || 0,
 			groupProductId: groupProductsData[0]?.id || 0,
 		},
@@ -89,26 +90,31 @@ const ProductAddForm = ({
 	const images = form.watch('imageUrls');
 
 	// Handle file drop for image uploads
-	const onDrop = useCallback((acceptedFiles: File[]) => {
-		if (acceptedFiles?.length) {
-			setFiles(prevFiles => {
-				const newFiles = prevFiles ? [...prevFiles, ...acceptedFiles] : acceptedFiles;
+	const onDrop = useCallback(
+		(acceptedFiles: File[]) => {
+			if (acceptedFiles?.length) {
+				setFiles((prevFiles) => {
+					const newFiles = prevFiles
+						? [...prevFiles, ...acceptedFiles]
+						: acceptedFiles;
 
-				// Update form value
-				form.setValue(
-					'imageUrls',
-					newFiles.map(file => URL.createObjectURL(file))
-				);
+					// Update form value
+					form.setValue(
+						'imageUrls',
+						newFiles.map((file) => URL.createObjectURL(file))
+					);
 
-				return newFiles;
-			});
-		}
-	}, [form]);
+					return newFiles;
+				});
+			}
+		},
+		[form]
+	);
 
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
 		onDrop,
 		accept: {
-			'image/*': ['.jpeg', '.jpg', '.png', '.webp']
+			'image/*': ['.jpeg', '.jpg', '.png', '.webp'],
 		},
 		maxSize: 5 * 1024 * 1024, // 5MB
 	});
@@ -121,7 +127,7 @@ const ProductAddForm = ({
 
 			form.setValue(
 				'imageUrls',
-				updatedFiles.map(file => URL.createObjectURL(file))
+				updatedFiles.map((file) => URL.createObjectURL(file))
 			);
 		}
 	};
@@ -130,7 +136,7 @@ const ProductAddForm = ({
 	async function onSubmit(values: CreateProductFormType) {
 		if (loading) return;
 		if (!files || files.length === 0) {
-			toast.error("Vui lòng thêm ít nhất một hình ảnh sản phẩm");
+			toast.error('Vui lòng thêm ít nhất một hình ảnh sản phẩm');
 			return;
 		}
 
@@ -160,7 +166,7 @@ const ProductAddForm = ({
 				bodyCreateProduct
 			);
 
-			toast.success(result.payload.message || "Thêm sản phẩm thành công");
+			toast.success(result.payload.message || 'Thêm sản phẩm thành công');
 			router.push('/seller/product');
 			router.refresh();
 		} catch (error: any) {
@@ -196,7 +202,9 @@ const ProductAddForm = ({
 									name="name"
 									render={({ field }) => (
 										<FormItem className="flex-1">
-											<FormLabel>Tên sản phẩm <span className="text-red-500">*</span></FormLabel>
+											<FormLabel>
+												Tên sản phẩm <span className="text-red-500">*</span>
+											</FormLabel>
 											<FormControl>
 												<Input
 													placeholder="Nhập tên sản phẩm"
@@ -227,7 +235,8 @@ const ProductAddForm = ({
 												/>
 											</FormControl>
 											<FormDescription>
-												Mô tả chi tiết về sản phẩm, tính năng và đặc điểm nổi bật
+												Mô tả chi tiết về sản phẩm, tính năng và đặc điểm nổi
+												bật
 											</FormDescription>
 											<FormMessage />
 										</FormItem>
@@ -249,12 +258,18 @@ const ProductAddForm = ({
 									name="imageUrls"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Thêm hình ảnh <span className="text-red-500">*</span></FormLabel>
+											<FormLabel>
+												Thêm hình ảnh <span className="text-red-500">*</span>
+											</FormLabel>
 											<FormControl>
 												<div
 													{...getRootProps()}
 													className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
-														${isDragActive ? 'border-primary bg-primary/5' : 'border-gray-300 hover:bg-gray-50'}
+														${
+															isDragActive
+																? 'border-primary bg-primary/5'
+																: 'border-gray-300 hover:bg-gray-50'
+														}
 													`}
 												>
 													<input {...getInputProps()} ref={inputRef} />
@@ -263,11 +278,17 @@ const ProductAddForm = ({
 															<Upload className="h-6 w-6 text-primary" />
 														</div>
 														{isDragActive ? (
-															<p className="text-sm text-gray-700">Thả hình ảnh vào đây...</p>
+															<p className="text-sm text-gray-700">
+																Thả hình ảnh vào đây...
+															</p>
 														) : (
 															<>
-																<p className="text-sm text-gray-700">Kéo và thả hình ảnh vào đây hoặc nhấp để chọn</p>
-																<p className="text-xs text-gray-500">JPG, PNG hoặc WEBP (tối đa 5MB)</p>
+																<p className="text-sm text-gray-700">
+																	Kéo và thả hình ảnh vào đây hoặc nhấp để chọn
+																</p>
+																<p className="text-xs text-gray-500">
+																	JPG, PNG hoặc WEBP (tối đa 5MB)
+																</p>
 															</>
 														)}
 													</div>
@@ -318,13 +339,15 @@ const ProductAddForm = ({
 										name="price"
 										render={({ field: { onChange, ...field } }) => (
 											<FormItem>
-												<FormLabel>Giá bán <span className="text-red-500">*</span></FormLabel>
+												<FormLabel>
+													Giá bán <span className="text-red-500">*</span>
+												</FormLabel>
 												<FormControl>
 													<div className="relative">
 														<Input
 															type="number"
 															min={0}
-															onChange={e => onChange(Number(e.target.value))}
+															onChange={(e) => onChange(Number(e.target.value))}
 															placeholder="0"
 															{...field}
 														/>
@@ -346,13 +369,15 @@ const ProductAddForm = ({
 										name="quantity"
 										render={({ field: { onChange, ...field } }) => (
 											<FormItem>
-												<FormLabel>Số lượng <span className="text-red-500">*</span></FormLabel>
+												<FormLabel>
+													Số lượng <span className="text-red-500">*</span>
+												</FormLabel>
 												<FormControl>
 													<Input
 														type="number"
 														min={0}
 														placeholder="0"
-														onChange={e => onChange(Number(e.target.value))}
+														onChange={(e) => onChange(Number(e.target.value))}
 														{...field}
 													/>
 												</FormControl>
@@ -364,6 +389,30 @@ const ProductAddForm = ({
 										)}
 									/>
 								</div>
+
+								<FormField
+									control={form.control}
+									name="star"
+									render={({ field: { onChange, ...field } }) => (
+										<FormItem>
+											<FormLabel>Số sao của sản phẩm</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													min={1}
+													max={4}
+													step={1}
+													defaultValue={2}
+													placeholder="2"
+													onChange={(e) => onChange(Number(e.target.value))}
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription>Số sao của sản phẩm</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 							</CardContent>
 						</Card>
 					</div>
@@ -378,11 +427,7 @@ const ProductAddForm = ({
 									<h2 className="font-medium text-lg">Thao tác</h2>
 								</div>
 
-								<Button
-									type="submit"
-									className="w-full"
-									disabled={loading}
-								>
+								<Button type="submit" className="w-full" disabled={loading}>
 									{loading ? (
 										<>
 											<Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -421,7 +466,9 @@ const ProductAddForm = ({
 									name="groupProductId"
 									render={({ field: { value, onChange, ...field } }) => (
 										<FormItem>
-											<FormLabel>Nhóm sản phẩm <span className="text-red-500">*</span></FormLabel>
+											<FormLabel>
+												Nhóm sản phẩm <span className="text-red-500">*</span>
+											</FormLabel>
 											<FormControl>
 												<Select
 													value={String(value)}
@@ -432,7 +479,10 @@ const ProductAddForm = ({
 													</SelectTrigger>
 													<SelectContent>
 														{groupProductsData.map((group) => (
-															<SelectItem key={group.id} value={String(group.id)}>
+															<SelectItem
+																key={group.id}
+																value={String(group.id)}
+															>
 																{group.name}
 															</SelectItem>
 														))}
@@ -449,7 +499,9 @@ const ProductAddForm = ({
 									name="cityId"
 									render={({ field: { value, onChange, ...field } }) => (
 										<FormItem>
-											<FormLabel>Thành phố <span className="text-red-500">*</span></FormLabel>
+											<FormLabel>
+												Thành phố <span className="text-red-500">*</span>
+											</FormLabel>
 											<FormControl>
 												<Select
 													value={String(value)}
@@ -488,7 +540,8 @@ const ProductAddForm = ({
 													Hiển thị sản phẩm
 												</FormLabel>
 												<FormDescription>
-													Sản phẩm sẽ được hiển thị cho người mua ngay sau khi tạo
+													Sản phẩm sẽ được hiển thị cho người mua ngay sau khi
+													tạo
 												</FormDescription>
 											</div>
 										</FormItem>
