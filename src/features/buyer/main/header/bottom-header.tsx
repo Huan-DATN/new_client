@@ -1,19 +1,21 @@
-import { ChevronDown, Heart, Package, ShoppingCart, User } from 'lucide-react';
+import {
+	ChevronDown,
+	MessageCircle,
+	Package,
+	ShoppingCart,
+	User,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import FormSearch from './form-search';
 
 function BottomHeader({ sessionToken }: { sessionToken: string | undefined }) {
-
 	return (
 		<div className="border-b bg-white">
 			<div className="max-w-7xl mx-auto py-3 px-4">
 				<div className="flex items-center justify-between">
 					{/* Logo */}
-					<Link
-						href="/buyer"
-						className="flex items-center space-x-2"
-					>
+					<Link href="/buyer" className="flex items-center space-x-2">
 						<Image
 							src={`/img/logoocop.png`}
 							width={150}
@@ -41,11 +43,11 @@ function BottomHeader({ sessionToken }: { sessionToken: string | undefined }) {
 						{sessionToken ? (
 							<>
 								<Link
-									href="/buyer/wishlist"
+									href="/buyer/chatbot"
 									className="flex flex-col items-center text-gray-700 hover:text-green-700 transition-colors"
 								>
-									<Heart size={22} />
-									<span className="text-xs mt-1">Yêu thích</span>
+									<MessageCircle size={22} />
+									<span className="text-xs mt-1">Chatbot</span>
 								</Link>
 
 								<Link
