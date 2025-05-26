@@ -6,13 +6,13 @@ function RegisterPage() {
 	return (
 		<Tabs
 			defaultValue="buyer"
-			className="flex flex-col items-center justify-center w-full h-screen"
+			className="space-y-2 max-w-[400px] flex-shrink-0 w-full"
 		>
-			<TabsList>
+			<TabsList className="w-full justify-center">
 				<TabsTrigger value="buyer">Người mua</TabsTrigger>
 				<TabsTrigger value="seller">Người bán</TabsTrigger>
 			</TabsList>
-			<TabsContent value="buyer" className="flex flex-col items-center" asChild>
+			<TabsContent value="buyer" asChild>
 				<BuyerRegisterForm />
 			</TabsContent>
 			<TabsContent value="seller" asChild>

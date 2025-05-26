@@ -1,4 +1,11 @@
-import { Calendar, Home, Inbox, Settings, Users } from 'lucide-react';
+import {
+	Calendar,
+	Home,
+	Image as ImageIcon,
+	Inbox,
+	Settings,
+	Users,
+} from 'lucide-react';
 
 import {
 	Sidebar,
@@ -27,6 +34,11 @@ const items = [
 		title: 'Sản phẩm',
 		url: '/admin/product',
 		icon: Calendar,
+	},
+	{
+		title: 'Carousel',
+		url: '/admin/carousel',
+		icon: ImageIcon,
 	},
 	{
 		title: 'Tài khoản',

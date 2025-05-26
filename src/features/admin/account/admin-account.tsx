@@ -2,6 +2,13 @@
 
 import userRequest from '@/api/userRequest';
 import { Button } from '@/components/ui/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { handleErrorApi } from '@/lib/utils';
@@ -49,7 +56,7 @@ function AdminAccount({ sessionToken }: { sessionToken: string }) {
 		};
 
 		fetchData();
-	}, [accounts, isActive, role]);
+	}, [sessionToken, isActive, role]);
 
 	// If not mounted yet (during SSR), show a simplified version to avoid hydration errors
 	if (!isMounted) {
@@ -62,27 +69,40 @@ function AdminAccount({ sessionToken }: { sessionToken: string }) {
 		);
 	}
 
-	const refreshAccounts = () => {
+	const refreshAccounts = async () => {
 		setIsLoading(true);
-		// In a real implementation, this would call an API
-		setTimeout(() => {
+		try {
+			const response = await userRequest.getAllUsers(
+				sessionToken,
+				isActive,
+				role
+			);
+			setAccounts(response.payload.data);
+		} catch (error) {
+			handleErrorApi({
+				error,
+			});
+		} finally {
 			setIsLoading(false);
-		}, 1000);
+		}
 	};
 
-	const handleCreateAccount = (data: AccountFormValues) => {
+	const handleCreateAccount = async (data: AccountFormValues) => {
 		setIsSubmitting(true);
+		try {
+			// In a real implementation, this would call an API to create the account
+			// For now, we're just simulating it
+			// const response = await userRequest.createUser(sessionToken, data);
 
-		// Simulate API call
-		setTimeout(() => {
+			// Simulate API call
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+
 			toast({
+				title: 'Thành công',
 				description: 'Đã tạo tài khoản mới thành công',
 			});
-			setIsSubmitting(false);
-			setIsCreateModalOpen(false);
 
 			// In a real implementation, the new account would be returned from the API
-			// and added to the accounts list
 			const newAccount: Account = {
 				id: accounts.length + 1,
 				firstName: data.firstName,
@@ -99,7 +119,14 @@ function AdminAccount({ sessionToken }: { sessionToken: string }) {
 			};
 
 			setAccounts([newAccount, ...accounts]);
-		}, 1000);
+			setIsCreateModalOpen(false);
+		} catch (error) {
+			handleErrorApi({
+				error,
+			});
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -210,7 +237,11 @@ function AdminAccount({ sessionToken }: { sessionToken: string }) {
 							</div>
 						</div>
 						<div className="p-4">
-							<AccountsList accounts={accounts} sessionToken={sessionToken} />
+							<AccountsList
+								accounts={accounts}
+								sessionToken={sessionToken}
+								onAccountUpdated={refreshAccounts}
+							/>
 						</div>
 					</div>
 				</TabsContent>
@@ -219,10 +250,18 @@ function AdminAccount({ sessionToken }: { sessionToken: string }) {
 					<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
 						<div className="border-b border-gray-200 bg-gray-50 px-4 py-3 flex justify-between items-center">
 							<h2 className="font-medium text-gray-700">Quản trị viên</h2>
-							<div className="text-sm text-gray-500">Tổng số: tài khoản</div>
+							<div className="text-sm text-gray-500">
+								Tổng số:{' '}
+								{accounts.filter((a) => a.role === RoleEnum.ADMIN).length} tài
+								khoản
+							</div>
 						</div>
 						<div className="p-4">
-							<AccountsList accounts={accounts} sessionToken={sessionToken} />
+							<AccountsList
+								accounts={accounts}
+								sessionToken={sessionToken}
+								onAccountUpdated={refreshAccounts}
+							/>
 						</div>
 					</div>
 				</TabsContent>
@@ -231,10 +270,18 @@ function AdminAccount({ sessionToken }: { sessionToken: string }) {
 					<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
 						<div className="border-b border-gray-200 bg-gray-50 px-4 py-3 flex justify-between items-center">
 							<h2 className="font-medium text-gray-700">Cửa hàng</h2>
-							<div className="text-sm text-gray-500">Tổng số: tài khoản</div>
+							<div className="text-sm text-gray-500">
+								Tổng số:{' '}
+								{accounts.filter((a) => a.role === RoleEnum.SELLER).length} tài
+								khoản
+							</div>
 						</div>
 						<div className="p-4">
-							<AccountsList accounts={accounts} sessionToken={sessionToken} />
+							<AccountsList
+								accounts={accounts}
+								sessionToken={sessionToken}
+								onAccountUpdated={refreshAccounts}
+							/>
 						</div>
 					</div>
 				</TabsContent>
@@ -243,10 +290,18 @@ function AdminAccount({ sessionToken }: { sessionToken: string }) {
 					<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
 						<div className="border-b border-gray-200 bg-gray-50 px-4 py-3 flex justify-between items-center">
 							<h2 className="font-medium text-gray-700">Người mua</h2>
-							<div className="text-sm text-gray-500">Tổng số: tài khoản</div>
+							<div className="text-sm text-gray-500">
+								Tổng số:{' '}
+								{accounts.filter((a) => a.role === RoleEnum.BUYER).length} tài
+								khoản
+							</div>
 						</div>
 						<div className="p-4">
-							<AccountsList accounts={accounts} sessionToken={sessionToken} />
+							<AccountsList
+								accounts={accounts}
+								sessionToken={sessionToken}
+								onAccountUpdated={refreshAccounts}
+							/>
 						</div>
 					</div>
 				</TabsContent>
@@ -257,22 +312,38 @@ function AdminAccount({ sessionToken }: { sessionToken: string }) {
 							<h2 className="font-medium text-gray-700">
 								Tài khoản đã vô hiệu
 							</h2>
-							<div className="text-sm text-gray-500">Tổng số: tài khoản</div>
+							<div className="text-sm text-gray-500">
+								Tổng số: {accounts.filter((a) => !a.isActive).length} tài khoản
+							</div>
 						</div>
 						<div className="p-4">
-							<AccountsList accounts={accounts} sessionToken={sessionToken} />
+							<AccountsList
+								accounts={accounts}
+								sessionToken={sessionToken}
+								onAccountUpdated={refreshAccounts}
+							/>
 						</div>
 					</div>
 				</TabsContent>
 			</Tabs>
 
 			{/* Create Account Modal */}
-			<AccountFormModal
-				isOpen={isCreateModalOpen}
-				onClose={() => setIsCreateModalOpen(false)}
-				onSubmit={handleCreateAccount}
-				isSubmitting={isSubmitting}
-			/>
+			<Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Tạo tài khoản mới</DialogTitle>
+						<DialogDescription>
+							Nhập thông tin để tạo tài khoản mới
+						</DialogDescription>
+					</DialogHeader>
+					<AccountFormModal
+						isOpen={isCreateModalOpen}
+						onClose={() => setIsCreateModalOpen(false)}
+						onSubmit={handleCreateAccount}
+						isSubmitting={isSubmitting}
+					/>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }

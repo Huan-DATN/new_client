@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Filter, Package } from 'lucide-react';
+import { Filter, Package, Plus } from 'lucide-react';
 import { cookies } from 'next/headers';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import InputSearch from './input-search';
 import OrderBox from './order-box';
@@ -33,6 +34,12 @@ async function SellerProductPage() {
 						<Button variant="outline" size="sm">
 							<Filter className="mr-2 h-4 w-4" />
 							Bộ lọc
+						</Button>
+						<Button variant="outline" size="sm">
+							<Link href="/seller/product/add">
+								<Plus className="ml-2 h-4 w-4" />
+								Thêm sản phẩm
+							</Link>
 						</Button>
 					</div>
 				</div>

@@ -173,6 +173,11 @@ const productRequest = {
 			headers: { Authorization: `Bearer ${sessionToken}` },
 		});
 	},
+	getProductRecommend: (id: number, { limit }: PaginationReqType) => {
+		return http.get<ProductListResType>(
+			`/products/recommend/${id}?limit=${limit}`
+		);
+	},
 };
 
 export default productRequest;

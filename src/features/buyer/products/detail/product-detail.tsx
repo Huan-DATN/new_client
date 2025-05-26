@@ -1,7 +1,15 @@
 import productRequest from '@/api/productRequest';
 import { Separator } from '@/components/ui/separator';
 import { getRole } from '@/lib/utils';
-import { ArrowLeft, CheckCircle, MapPin, Package, ShoppingBag, Star, Truck } from 'lucide-react';
+import {
+	ArrowLeft,
+	CheckCircle,
+	MapPin,
+	Package,
+	ShoppingBag,
+	Star,
+	Truck,
+} from 'lucide-react';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,6 +20,12 @@ import RatingsSection from './ratings-section';
 async function ProductDetail({ id }: { id: string }) {
 	const res = await productRequest.getDetail(Number(id));
 	const data = res.payload.data;
+
+	const resRecommend = await productRequest.getProductRecommend(Number(id), {
+		limit: 4,
+	});
+
+	const recommendData = resRecommend.payload.data;
 
 	const token = (await cookies()).get('sessionToken')?.value;
 	const role = getRole(token!);
@@ -84,7 +98,11 @@ async function ProductDetail({ id }: { id: string }) {
 								{[...Array(4)].map((_, index) => (
 									<Star
 										key={index}
-										className={`h-5 w-5 ${index < data.star! ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+										className={`h-5 w-5 ${
+											index < data.star!
+												? 'fill-yellow-400 text-yellow-400'
+												: 'text-gray-300'
+										}`}
 									/>
 								))}
 							</div>
@@ -128,7 +146,9 @@ async function ProductDetail({ id }: { id: string }) {
 							<Package className="h-5 w-5 text-gray-500 mt-0.5 flex-shrink-0" />
 							<div>
 								<span className="text-gray-700 font-medium">Danh mục: </span>
-								<span>{data.categories?.map((category) => category.name).join(', ')}</span>
+								<span>
+									{data.categories?.map((category) => category.name).join(', ')}
+								</span>
 							</div>
 						</div>
 					</div>
@@ -170,7 +190,7 @@ async function ProductDetail({ id }: { id: string }) {
 					<span className="w-1 h-6 bg-green-500 rounded-full mr-2 inline-block"></span>
 					Sản phẩm tương tự
 				</h2>
-				<ProductSimilar data={data} />
+				<ProductSimilar data={recommendData} />
 			</div>
 
 			{/* Ratings section */}

@@ -72,6 +72,17 @@ const userRequest = {
 			},
 		});
 	},
+	updateUser: (
+		sessionToken: string,
+		id: number,
+		data: UpdateBuyerMeBodyType
+	) => {
+		return http.put<AccountResType>(`/user/${id}`, data, {
+			headers: {
+				Authorization: `Bearer ${sessionToken}`,
+			},
+		});
+	},
 };
 
 export default userRequest;

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 function layout({ children }: { children: React.ReactNode }) {
 	return (
-		<div className="flex flex-col justify-center items-center h-screen">
+		<div className="flex flex-col justify-center items-center h-screen w-full">
 			<Link href={'/'}>
 				<Image
 					src={'/img/logoocop.png'}

@@ -54,9 +54,18 @@ function ShopsGridSection() {
 
 	// Active filters display
 	const activeFilters = [];
-	if (searchQuery) activeFilters.push({ key: 'search', label: `Tìm kiếm: ${searchQuery}` });
-	if (selectedCategory) activeFilters.push({ key: 'category', label: `Danh mục: ${selectedCategory}` });
-	if (selectedRating) activeFilters.push({ key: 'rating', label: `Đánh giá: ${selectedRating}★+` });
+	if (searchQuery)
+		activeFilters.push({ key: 'search', label: `Tìm kiếm: ${searchQuery}` });
+	if (selectedCategory)
+		activeFilters.push({
+			key: 'category',
+			label: `Danh mục: ${selectedCategory}`,
+		});
+	if (selectedRating)
+		activeFilters.push({
+			key: 'rating',
+			label: `Đánh giá: ${selectedRating}★+`,
+		});
 
 	return (
 		<div className="space-y-6">
@@ -65,8 +74,8 @@ function ShopsGridSection() {
 				<div>
 					<h2 className="text-lg font-semibold mb-1">Tất cả cửa hàng</h2>
 					<p className="text-sm text-gray-500">
-						Hiển thị <span className="font-medium">{shops.length}</span> trong tổng số{' '}
-						<span className="font-medium">{totalItems}</span> cửa hàng
+						Hiển thị <span className="font-medium">{shops.length}</span> trong
+						tổng số <span className="font-medium">{totalItems}</span> cửa hàng
 					</p>
 				</div>
 
@@ -75,7 +84,9 @@ function ShopsGridSection() {
 						<Button
 							variant="ghost"
 							size="sm"
-							className={`px-3 rounded-none ${viewMode === 'grid' ? 'bg-gray-100' : ''}`}
+							className={`px-3 rounded-none ${
+								viewMode === 'grid' ? 'bg-gray-100' : ''
+							}`}
 							onClick={() => setViewMode('grid')}
 						>
 							<Grid3X3 size={18} />
@@ -83,7 +94,9 @@ function ShopsGridSection() {
 						<Button
 							variant="ghost"
 							size="sm"
-							className={`px-3 rounded-none ${viewMode === 'compact' ? 'bg-gray-100' : ''}`}
+							className={`px-3 rounded-none ${
+								viewMode === 'compact' ? 'bg-gray-100' : ''
+							}`}
 							onClick={() => setViewMode('compact')}
 						>
 							<LayoutList size={18} />
@@ -143,26 +156,24 @@ function ShopsGridSection() {
 			{/* Loading state */}
 			{loading ? (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-					{Array(6).fill(0).map((_, index) => (
-						<div key={index} className="border rounded-lg p-4">
-							<div className="flex gap-3">
-								<Skeleton className="h-16 w-16 rounded-full" />
-								<div className="space-y-2 flex-1">
-									<Skeleton className="h-4 w-3/4" />
-									<Skeleton className="h-3 w-1/2" />
-									<Skeleton className="h-3 w-2/3" />
+					{Array(6)
+						.fill(0)
+						.map((_, index) => (
+							<div key={index} className="border rounded-lg p-4">
+								<div className="flex gap-3">
+									<Skeleton className="h-16 w-16 rounded-full" />
+									<div className="space-y-2 flex-1">
+										<Skeleton className="h-4 w-3/4" />
+										<Skeleton className="h-3 w-1/2" />
+										<Skeleton className="h-3 w-2/3" />
+									</div>
 								</div>
 							</div>
-						</div>
-					))}
+						))}
 				</div>
 			) : shops.length > 0 ? (
 				<>
-					<ShopsGrid
-						data={shops}
-						col={viewMode === 'grid' ? 3 : 2}
-						viewMode={viewMode}
-					/>
+					<ShopsGrid data={shops} col={viewMode === 'grid' ? 3 : 2} />
 
 					{/* Pagination */}
 					{totalPages > 1 && (
@@ -177,17 +188,21 @@ function ShopsGridSection() {
 									Trước
 								</Button>
 
-								{Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-									<Button
-										key={page}
-										variant={page.toString() === checkedPage ? "default" : "ghost"}
-										size="sm"
-										className="min-w-[40px]"
-										onClick={() => handlePageChange(page)}
-									>
-										{page}
-									</Button>
-								))}
+								{Array.from({ length: totalPages }, (_, i) => i + 1).map(
+									(page) => (
+										<Button
+											key={page}
+											variant={
+												page.toString() === checkedPage ? 'default' : 'ghost'
+											}
+											size="sm"
+											className="min-w-[40px]"
+											onClick={() => handlePageChange(page)}
+										>
+											{page}
+										</Button>
+									)
+								)}
 
 								<Button
 									variant="ghost"

@@ -4,16 +4,26 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/ui/dialog';
+import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
+import { handleErrorApi } from '@/lib/utils';
 import { UserSchema } from '@/schemaValidations/schema';
 import { Ban, Edit, EyeIcon, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { z } from 'zod';
+import userRequest from '../../../api/userRequest';
 import { RoleEnum } from '../../../constants/roleEnum';
 import { getDateFormat } from '../../../lib/utils';
 import AccountDetailModal from './account-detail-modal';
@@ -25,13 +35,16 @@ type Account = z.infer<typeof UserSchema>;
 function AccountsList({
 	accounts,
 	sessionToken,
+	onAccountUpdated,
 }: {
 	accounts: Account[];
 	sessionToken: string;
+	onAccountUpdated?: () => void;
 }) {
 	const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
 	const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-	const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const { toast } = useToast();
@@ -43,36 +56,94 @@ function AccountsList({
 
 	const handleEditAccount = (account: Account) => {
 		setSelectedAccount(account);
-		setIsFormModalOpen(true);
+		setIsEditModalOpen(true);
 	};
 
-	const handleDeactivateAccount = (id: number) => {
-		toast({
-			description: `Vô hiệu hóa tài khoản #${id}`,
-		});
-		// In a real implementation, this would call an API to deactivate the account
+	const handleDeactivateAccount = async (id: number) => {
+		try {
+			// In a real implementation, this would call an API to deactivate the account
+			// await userRequest.deactivateUser(sessionToken, id);
+
+			// Simulate API call
+			await new Promise((resolve) => setTimeout(resolve, 500));
+
+			toast({
+				title: 'Thành công',
+				description: `Vô hiệu hóa tài khoản #${id} thành công`,
+			});
+
+			// Refresh the account list
+			if (onAccountUpdated) {
+				onAccountUpdated();
+			}
+		} catch (error) {
+			handleErrorApi({ error });
+		}
 	};
 
-	const handleDeleteAccount = (id: number) => {
-		toast({
-			description: `Xóa tài khoản #${id}`,
-		});
-		// In a real implementation, this would show a confirmation dialog then delete
+	const handleDeleteAccount = async () => {
+		if (!selectedAccount) return;
+
+		try {
+			// In a real implementation, this would call an API to delete the account
+			// await userRequest.deleteUser(sessionToken, selectedAccount.id);
+
+			// Simulate API call
+			await new Promise((resolve) => setTimeout(resolve, 500));
+
+			toast({
+				title: 'Thành công',
+				description: `Xóa tài khoản #${selectedAccount.id} thành công`,
+			});
+
+			setIsDeleteModalOpen(false);
+
+			// Refresh the account list
+			if (onAccountUpdated) {
+				onAccountUpdated();
+			}
+		} catch (error) {
+			handleErrorApi({ error });
+		}
 	};
 
-	const handleFormSubmit = (data: AccountFormValues) => {
+	const openDeleteDialog = (account: Account) => {
+		setSelectedAccount(account);
+		setIsDeleteModalOpen(true);
+	};
+
+	const handleFormSubmit = async (data: AccountFormValues) => {
+		if (!selectedAccount) return;
+
 		setIsSubmitting(true);
 
-		// Simulate API call
-		setTimeout(() => {
+		try {
+			// In a real implementation, this would call an API to update the account
+			await userRequest.updateUser(sessionToken, selectedAccount.id, data);
+
+			// Simulate API call
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+
 			toast({
-				description: selectedAccount?.id
-					? `Đã cập nhật tài khoản #${selectedAccount.id}`
-					: 'Đã tạo tài khoản mới',
+				title: 'Thành công',
+				description: `Đã cập nhật tài khoản #${selectedAccount.id}`,
 			});
+
+			setIsEditModalOpen(false);
+
+			// Refresh the account list
+			if (onAccountUpdated) {
+				onAccountUpdated();
+			}
+		} catch (error) {
+			toast({
+				variant: 'destructive',
+				title: 'Lỗi',
+				description: 'Đã xảy ra lỗi khi cập nhật tài khoản',
+			});
+		} finally {
 			setIsSubmitting(false);
-			setIsFormModalOpen(false);
-		}, 1000);
+		}
 	};
 
 	const getRoleBadge = (role: string) => {
@@ -223,7 +294,7 @@ function AccountsList({
 												{account.isActive ? 'Vô hiệu hóa' : 'Đã vô hiệu'}
 											</DropdownMenuItem>
 											<DropdownMenuItem
-												onClick={() => handleDeleteAccount(account.id)}
+												onClick={() => openDeleteDialog(account)}
 												className="text-red-600"
 											>
 												<Trash2 className="mr-2 h-4 w-4" />
@@ -239,20 +310,67 @@ function AccountsList({
 			</div>
 
 			{/* Detail Modal */}
-			<AccountDetailModal
-				account={selectedAccount}
-				isOpen={isDetailModalOpen}
-				onClose={() => setIsDetailModalOpen(false)}
-			/>
+			<Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Chi tiết tài khoản</DialogTitle>
+					</DialogHeader>
+					<AccountDetailModal
+						account={selectedAccount}
+						isOpen={isDetailModalOpen}
+						onClose={() => setIsDetailModalOpen(false)}
+					/>
+				</DialogContent>
+			</Dialog>
 
-			{/* Edit/Create Modal */}
-			<AccountFormModal
-				account={selectedAccount}
-				isOpen={isFormModalOpen}
-				onClose={() => setIsFormModalOpen(false)}
-				onSubmit={handleFormSubmit}
-				isSubmitting={isSubmitting}
-			/>
+			{/* Edit Modal */}
+			<Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Chỉnh sửa tài khoản</DialogTitle>
+						<DialogDescription>Cập nhật thông tin tài khoản</DialogDescription>
+					</DialogHeader>
+					<AccountFormModal
+						account={selectedAccount}
+						isOpen={isEditModalOpen}
+						onClose={() => setIsEditModalOpen(false)}
+						onSubmit={handleFormSubmit}
+						isSubmitting={isSubmitting}
+					/>
+				</DialogContent>
+			</Dialog>
+
+			{/* Delete Confirmation Dialog */}
+			<Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Xóa tài khoản</DialogTitle>
+						<DialogDescription>
+							Hành động này không thể hoàn tác.
+						</DialogDescription>
+					</DialogHeader>
+					<div className="py-4">
+						<p>
+							Bạn có chắc chắn muốn xóa tài khoản{' '}
+							<strong>
+								{selectedAccount?.firstName} {selectedAccount?.lastName}
+							</strong>
+							?
+						</p>
+					</div>
+					<DialogFooter>
+						<Button
+							variant="outline"
+							onClick={() => setIsDeleteModalOpen(false)}
+						>
+							Hủy
+						</Button>
+						<Button variant="destructive" onClick={handleDeleteAccount}>
+							Xóa
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</>
 	);
 }

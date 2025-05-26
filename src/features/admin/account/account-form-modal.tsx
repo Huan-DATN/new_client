@@ -31,7 +31,7 @@ import { Switch } from '@/components/ui/switch';
 import { UserSchema } from '@/schemaValidations/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Camera, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { AccountFormValues, accountFormSchema } from './schemas';
@@ -71,6 +71,35 @@ function AccountFormModal({
 		},
 	});
 
+	// Reset form when modal is opened with account data or closed
+	useEffect(() => {
+		if (isOpen && account) {
+			// When editing an existing account, reset form with account data
+			form.reset({
+				firstName: account.firstName || '',
+				lastName: account.lastName || '',
+				email: account.email || '',
+				phone: account.phone || '',
+				address: account.address || '',
+				role: account.role as 'ADMIN' | 'SELLER' | 'BUYER',
+				isActive: account.isActive !== undefined ? account.isActive : true,
+			});
+			setAvatarUrl(account.image?.publicUrl || null);
+		} else if (!isOpen) {
+			// When closing the modal, reset to empty form
+			form.reset({
+				firstName: '',
+				lastName: '',
+				email: '',
+				phone: '',
+				address: '',
+				role: 'BUYER',
+				isActive: true,
+			});
+			setAvatarUrl(null);
+		}
+	}, [isOpen, account, form]);
+
 	const handleFormSubmit = (values: AccountFormValues) => {
 		onSubmit(values);
 	};
@@ -86,7 +115,12 @@ function AccountFormModal({
 	};
 
 	return (
-		<Dialog open={isOpen} onOpenChange={onClose}>
+		<Dialog
+			open={isOpen}
+			onOpenChange={(open) => {
+				if (!open) onClose();
+			}}
+		>
 			<DialogContent className="sm:max-w-[550px]">
 				<DialogHeader>
 					<DialogTitle>
