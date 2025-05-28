@@ -23,6 +23,7 @@ function OrderTimeLine({
 	id,
 	data,
 	isSeller = false,
+	isAdmin = false,
 }: {
 	id: number;
 	data: {
@@ -36,6 +37,7 @@ function OrderTimeLine({
 		updatedAt: Date;
 	}[];
 	isSeller?: boolean;
+	isAdmin?: boolean;
 }) {
 	const router = useRouter();
 	const handleClick = async (statusId: number) => {
@@ -57,7 +59,9 @@ function OrderTimeLine({
 				<li className="mb-6 ms-4 last:mb-0" key={index}>
 					{/* Status marker */}
 					<div
-						className={`absolute w-3 h-3 ${item.isActive ? 'bg-green-500' : 'bg-gray-200'} rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900`}
+						className={`absolute w-3 h-3 ${
+							item.isActive ? 'bg-green-500' : 'bg-gray-200'
+						} rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900`}
 					/>
 
 					{/* Status content */}
@@ -65,11 +69,14 @@ function OrderTimeLine({
 						{/* Expected date */}
 						<div className="flex items-center text-sm text-muted-foreground">
 							<Clock className="h-3.5 w-3.5 mr-1" />
-							<span>Dự kiến: {new Date(item.date).toLocaleDateString('vi-VN', {
-								year: 'numeric',
-								month: '2-digit',
-								day: '2-digit',
-							})}</span>
+							<span>
+								Dự kiến:{' '}
+								{new Date(item.date).toLocaleDateString('vi-VN', {
+									year: 'numeric',
+									month: '2-digit',
+									day: '2-digit',
+								})}
+							</span>
 						</div>
 
 						{/* Status badge with name */}
@@ -81,11 +88,14 @@ function OrderTimeLine({
 						{item.isActive && (
 							<div className="flex items-center text-sm text-green-600">
 								<CheckCircle className="h-3.5 w-3.5 mr-1" />
-								<span>Hoàn thành: {new Date(item.updatedAt).toLocaleDateString('vi-VN', {
-									year: 'numeric',
-									month: '2-digit',
-									day: '2-digit',
-								})}</span>
+								<span>
+									Hoàn thành:{' '}
+									{new Date(item.updatedAt).toLocaleDateString('vi-VN', {
+										year: 'numeric',
+										month: '2-digit',
+										day: '2-digit',
+									})}
+								</span>
 							</div>
 						)}
 
