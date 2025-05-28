@@ -129,7 +129,6 @@ export function DialogDemo({
 								/>
 
 								<div className="grid w-full gap-1.5">
-									<Label htmlFor="message">Your message</Label>
 									<Textarea
 										id={`comment-${product.id}`}
 										value={getComment(ratings, product.id)}

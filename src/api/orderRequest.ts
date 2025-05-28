@@ -28,9 +28,15 @@ const orderRequest = {
 	},
 	getAllOrders: (
 		sessionToken: string,
-		options: { page?: number; limit?: number } = {}
+		options: {
+			page?: number;
+			limit?: number;
+			search?: string;
+			status?: string;
+			shopId?: string;
+		} = {}
 	) => {
-		const { page, limit } = options;
+		const { page, limit, search, status, shopId } = options;
 		let url = `/order`;
 		const params = new URLSearchParams();
 
@@ -40,6 +46,18 @@ const orderRequest = {
 
 		if (limit) {
 			params.append('limit', limit.toString());
+		}
+
+		if (search) {
+			params.append('search', search);
+		}
+
+		if (status) {
+			params.append('status', status);
+		}
+
+		if (shopId) {
+			params.append('shopId', shopId);
 		}
 
 		if (params.toString()) {
