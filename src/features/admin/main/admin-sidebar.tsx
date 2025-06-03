@@ -1,5 +1,6 @@
 import {
 	Calendar,
+	Folder,
 	Home,
 	Image as ImageIcon,
 	Inbox,
@@ -34,6 +35,11 @@ const items = [
 		title: 'Sản phẩm',
 		url: '/admin/product',
 		icon: Calendar,
+	},
+	{
+		title: 'Danh mục',
+		url: '/admin/category',
+		icon: Folder,
 	},
 	{
 		title: 'Carousel',

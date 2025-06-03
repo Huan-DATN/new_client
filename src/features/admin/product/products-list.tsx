@@ -71,7 +71,7 @@ function ProductsList({
 	const handlePageChange = (newPage: number) => {
 		const params = new URLSearchParams(window.location.search);
 		params.set('page', newPage.toString());
-		router.push(`/seller/product?${params.toString()}`);
+		router.push(`/admin/product?${params.toString()}`);
 	};
 
 	const toggleSelectAll = () => {
