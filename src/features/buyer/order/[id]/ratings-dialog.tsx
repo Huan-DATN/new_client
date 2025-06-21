@@ -81,7 +81,7 @@ export function DialogDemo({
 			<DialogTrigger asChild>
 				<Button
 					variant="outline"
-					className="bg-gray-300 text-sm mt-2 hover:bg-gray-400 max-w-1/2!"
+					className="text-sm mt-2 hover:border-green-500 text-green-700 bg-green-50 max-w-1/2! font-bold text-primary border-green-500"
 				>
 					Đánh giá
 				</Button>

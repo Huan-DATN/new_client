@@ -26,6 +26,11 @@ const cardRequest = {
 			headers: { Authorization: `Bearer ${sessionToken}` },
 		}),
 
+	getCardByShopId: (sessionToken: string, shopId: number) =>
+		http.get<CardListResponseType>(`/cards/shop/${shopId}`, {
+			headers: { Authorization: `Bearer ${sessionToken}` },
+		}),
+
 	updateCard: (sessionToken: string, id: number, body: UpdateCardType) =>
 		http.put<{ data: CardResponseType; message: string }>(
 			`/cards/${id}`,

@@ -67,3 +67,17 @@ export const checkCompletedOrder = (orderStatus: any[]) => {
 	);
 	return completedStatus ? true : false;
 };
+
+export const getLastestActiveStatus = (orderStatus: any[]) => {
+	const activeStatus = orderStatus.filter((item: any) => item.isActive);
+
+	if (activeStatus.length === 0) {
+		return {
+			type: OrderStatusEnum.PENDING,
+			name: 'PENDING',
+		};
+	}
+
+	const latestActiveStatus = activeStatus[activeStatus.length - 1].status;
+	return latestActiveStatus;
+};

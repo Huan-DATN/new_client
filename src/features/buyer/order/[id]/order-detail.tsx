@@ -1,5 +1,4 @@
 import orderRequest from '@/api/orderRequest';
-import StatusComponent from '@/components/status-component';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -8,13 +7,23 @@ import OrderTimeLine from '@/features/components/order-timeline';
 import {
 	checkCompletedOrder,
 	getDateFormat,
+	getLastestActiveStatus,
 	getPriceFormat,
 } from '@/lib/utils';
-import { CalendarIcon, MapPinIcon, PackageIcon, PhoneIcon, Truck, User2Icon } from 'lucide-react';
+import {
+	CalendarIcon,
+	MapPinIcon,
+	PackageIcon,
+	PhoneIcon,
+	Truck,
+	User2Icon,
+} from 'lucide-react';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import OrderStatusBadge from '../order-status-badge';
+import ConfirmButton from './confirm-button';
 import { DialogDemo } from './ratings-dialog';
 
 async function OrderDetail({ id }: { id: number }) {
@@ -25,16 +34,13 @@ async function OrderDetail({ id }: { id: number }) {
 		redirect('/auth/login');
 	}
 
+	const latestActiveStatus = getLastestActiveStatus(payload.data.OrderStatus);
+
 	// Determine action buttons based on order status
 	const renderActionButton = () => {
-		const status = payload.data.OrderStatus[0].status.type;
-
 		if (checkCompletedOrder(payload.data.OrderStatus)) {
 			return (
 				<div className="flex gap-3">
-					<Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-50">
-						Mua lại
-					</Button>
 					<DialogDemo
 						items={payload.data.items}
 						orderId={id}
@@ -44,22 +50,20 @@ async function OrderDetail({ id }: { id: number }) {
 			);
 		}
 
-		switch(status) {
+		switch (latestActiveStatus.type) {
 			case 'CANCELLED':
 				return (
-					<Button variant="outline" className="text-gray-600 border-gray-400 hover:bg-gray-50">
+					<Button
+						variant="outline"
+						className="text-gray-600 border-gray-400 hover:bg-gray-50"
+					>
 						Đơn hàng đã hủy
 					</Button>
 				);
 			case 'SHIPPED':
 				return (
 					<div className="flex gap-3">
-						<Button variant="default">
-							Xác nhận nhận hàng
-						</Button>
-						<Button variant="destructive" className="bg-red-500 hover:bg-red-600">
-							Hủy đơn hàng
-						</Button>
+						<ConfirmButton id={id} />
 					</div>
 				);
 			default:
@@ -86,9 +90,11 @@ async function OrderDetail({ id }: { id: number }) {
 						<CardHeader className="flex flex-row items-center justify-between bg-gray-50 border-b">
 							<div className="flex flex-col">
 								<div className="text-sm text-gray-500">Đơn hàng</div>
-								<div className="text-lg font-bold text-primary">#MH{payload.data.id}</div>
+								<div className="text-lg font-bold text-primary">
+									#MH{payload.data.id}
+								</div>
 							</div>
-							<StatusComponent status={payload.data.OrderStatus[0].status.type} />
+							<OrderStatusBadge status={latestActiveStatus} size="lg" />
 						</CardHeader>
 						<CardContent className="p-6">
 							<div className="flex flex-col gap-4">
@@ -107,16 +113,35 @@ async function OrderDetail({ id }: { id: number }) {
 										<Truck size={18} />
 										<span className="text-sm">Phương thức thanh toán:</span>
 									</div>
-									<Badge variant="outline" className="font-medium text-blue-600 border-blue-600">
-										COD
-									</Badge>
+									{payload.data.paymentMethod === 'BANK_TRANSFER' ? (
+										<>
+											<Badge
+												variant="outline"
+												className="font-medium text-blue-600 border-blue-600"
+											>
+												Chuyển khoản
+											</Badge>
+											<Image
+												src={payload.data.payment?.image?.publicUrl || ''}
+												alt="Bank Transfer"
+												width={100}
+												height={100}
+												className="object-contain"
+											/>
+										</>
+									) : (
+										<Badge
+											variant="outline"
+											className="font-medium text-blue-600 border-blue-600"
+										>
+											COD
+										</Badge>
+									)}
 								</div>
 
 								<Separator />
 
-								<div>
-									{renderActionButton()}
-								</div>
+								<div>{renderActionButton()}</div>
 							</div>
 						</CardContent>
 					</Card>
@@ -136,7 +161,7 @@ async function OrderDetail({ id }: { id: number }) {
 													item.product?.images[0]?.publicUrl ??
 													'https://placehold.co/200x150/png'
 												}
-												alt={item.product?.name || "Product"}
+												alt={item.product?.name || 'Product'}
 												fill
 												className="object-cover"
 											/>
@@ -163,7 +188,9 @@ async function OrderDetail({ id }: { id: number }) {
 							<div className="bg-gray-50 p-4 flex flex-col gap-2 border-t">
 								<div className="flex justify-between">
 									<span className="text-gray-600">Tổng tiền sản phẩm:</span>
-									<span className="font-medium">{getPriceFormat(payload.data.total - 0)}</span>
+									<span className="font-medium">
+										{getPriceFormat(payload.data.total - 0)}
+									</span>
 								</div>
 								<div className="flex justify-between">
 									<span className="text-gray-600">Phí vận chuyển:</span>
@@ -171,8 +198,12 @@ async function OrderDetail({ id }: { id: number }) {
 								</div>
 								<Separator className="my-2" />
 								<div className="flex justify-between">
-									<span className="text-gray-700 font-medium">Tổng thanh toán:</span>
-									<span className="text-xl font-bold text-green-600">{getPriceFormat(payload.data.total)}</span>
+									<span className="text-gray-700 font-medium">
+										Tổng thanh toán:
+									</span>
+									<span className="text-xl font-bold text-green-600">
+										{getPriceFormat(payload.data.total)}
+									</span>
 								</div>
 							</div>
 						</CardContent>
@@ -184,7 +215,10 @@ async function OrderDetail({ id }: { id: number }) {
 							<div className="text-lg font-semibold">Trạng thái đơn hàng</div>
 						</CardHeader>
 						<CardContent className="p-6">
-							<OrderTimeLine id={payload.data.id} data={payload.data.OrderStatus} />
+							<OrderTimeLine
+								id={payload.data.id}
+								data={payload.data.OrderStatus}
+							/>
 						</CardContent>
 					</Card>
 				</div>
@@ -203,7 +237,9 @@ async function OrderDetail({ id }: { id: number }) {
 									<div>
 										<div className="text-sm text-gray-500">Người nhận:</div>
 										<div className="font-medium">
-											{payload.data.user.firstName + ' ' + payload.data.user.lastName}
+											{payload.data.user.firstName +
+												' ' +
+												payload.data.user.lastName}
 										</div>
 									</div>
 								</div>
@@ -212,14 +248,16 @@ async function OrderDetail({ id }: { id: number }) {
 									<div>
 										<div className="text-sm text-gray-500">Số điện thoại:</div>
 										<div className="font-medium">
-											{payload.data.user.phone || "Không có thông tin"}
+											{payload.data.user.phone || 'Không có thông tin'}
 										</div>
 									</div>
 								</div>
 								<div className="flex items-start gap-3">
 									<MapPinIcon size={18} className="text-gray-500 mt-0.5" />
 									<div>
-										<div className="text-sm text-gray-500">Địa chỉ giao hàng:</div>
+										<div className="text-sm text-gray-500">
+											Địa chỉ giao hàng:
+										</div>
 										<div className="font-medium">
 											{payload.data.addressLine}
 										</div>
@@ -238,14 +276,19 @@ async function OrderDetail({ id }: { id: number }) {
 							<div className="flex items-center gap-3">
 								<div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border">
 									<Image
-										src={payload.data.shop?.image?.publicUrl || "https://placehold.co/200x200/png"}
+										src={
+											payload.data.shop?.image?.publicUrl ||
+											'https://placehold.co/200x200/png'
+										}
 										alt="Shop Image"
 										fill
 										className="object-cover"
 									/>
 								</div>
 								<div>
-									<div className="font-semibold">{payload.data.shop.shopName}</div>
+									<div className="font-semibold">
+										{payload.data.shop.shopName}
+									</div>
 									<Link
 										href={`/buyer/shop/${payload.data.shop.id}`}
 										className="text-sm text-primary hover:underline"

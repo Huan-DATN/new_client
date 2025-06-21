@@ -15,16 +15,16 @@ const orderRequest = {
 			},
 		});
 	},
-	createOrder: (sessionToken: string, shopId: number) => {
-		return http.post<MessageResType>(
-			`order/${shopId}`,
-			{},
-			{
-				headers: {
-					Authorization: `Bearer ${sessionToken}`,
-				},
-			}
-		);
+	createOrder: (
+		sessionToken: string,
+		shopId: number,
+		body: { paymentMethod: string }
+	) => {
+		return http.post<OrderDetailResType>(`order/${shopId}`, body, {
+			headers: {
+				Authorization: `Bearer ${sessionToken}`,
+			},
+		});
 	},
 	getAllOrders: (
 		sessionToken: string,

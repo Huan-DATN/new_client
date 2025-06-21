@@ -163,6 +163,18 @@ export const OrderDetailSchema = z.object({
 				.optional(),
 		})
 	),
+	paymentMethod: z.enum(['BANK_TRANSFER', 'CASH']),
+	payment: z
+		.object({
+			id: z.number().int(),
+			orderId: z.number().int(),
+			image: z.object({
+				id: z.number().int(),
+				publicUrl: z.string(),
+			}),
+			createdAt: z.date(),
+		})
+		.optional(),
 	OrderStatus: z.array(
 		z.object({
 			id: z.number().int(),

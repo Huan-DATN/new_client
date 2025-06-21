@@ -78,14 +78,18 @@ async function CheckoutPage({ id }: { id: number }) {
 						<div className="p-5 space-y-4">
 							<div className="flex justify-between items-center pb-4 border-b border-gray-200">
 								<span className="text-gray-600">Tổng tiền hàng:</span>
-								<span className="font-medium">{getPriceFormat(dataCheckout.totalPrice)}</span>
+								<span className="font-medium">
+									{getPriceFormat(dataCheckout.totalPrice)}
+								</span>
 							</div>
 							<div className="flex justify-between items-center pb-4 border-b border-gray-200">
 								<span className="text-gray-600">Phí vận chuyển:</span>
 								<span className="font-medium">Miễn phí</span>
 							</div>
 							<div className="flex justify-between items-center pt-2">
-								<h3 className="text-lg font-semibold text-gray-800">Tổng cộng:</h3>
+								<h3 className="text-lg font-semibold text-gray-800">
+									Tổng cộng:
+								</h3>
 								<p className="text-2xl font-bold text-green-600">
 									{getPriceFormat(dataCheckout.totalPrice)}
 								</p>
@@ -98,6 +102,8 @@ async function CheckoutPage({ id }: { id: number }) {
 								<ButtonActive
 									sessionToken={sessionToken}
 									shopId={dataCheckout.shop.id}
+									orderId={id}
+									amount={dataCheckout.totalPrice}
 								/>
 							</div>
 						</div>
