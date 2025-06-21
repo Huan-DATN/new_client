@@ -4,7 +4,13 @@ import orderRequest from '@/api/orderRequest';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { Loader2, PackageX, Search } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -21,7 +27,8 @@ function OrdersList({ sessionToken }: { sessionToken: string }) {
 	const status = params.get('status') || '';
 
 	const [orders, setOrders] = useState<OrderListResType['data']>([]);
-	const [totalPages, setTotalPages] = useState<OrderListResType['meta']['totalPages']>(0);
+	const [totalPages, setTotalPages] =
+		useState<OrderListResType['meta']['totalPages']>(0);
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchInput, setSearchInput] = useState(search);
 
@@ -33,7 +40,7 @@ function OrdersList({ sessionToken }: { sessionToken: string }) {
 					page: Number(page),
 					limit: Number(limit),
 					...(search && { search }),
-					...(status && { status })
+					...(status && { status }),
 				});
 				setOrders(response.payload.data);
 				setTotalPages(response.payload.meta.totalPages);
@@ -88,10 +95,7 @@ function OrdersList({ sessionToken }: { sessionToken: string }) {
 						<Button type="submit">Tìm</Button>
 					</form>
 					<div className="w-full md:w-48">
-						<Select
-							value={status || 'ALL'}
-							onValueChange={handleStatusChange}
-						>
+						<Select value={status || 'ALL'} onValueChange={handleStatusChange}>
 							<SelectTrigger>
 								<SelectValue placeholder="Trạng thái" />
 							</SelectTrigger>
@@ -116,11 +120,12 @@ function OrdersList({ sessionToken }: { sessionToken: string }) {
 				) : orders.length > 0 ? (
 					<div className="border rounded-md overflow-hidden">
 						{/* Header */}
-						<div className="grid grid-cols-5 bg-muted p-3 text-sm font-medium">
+						<div className="grid grid-cols-6 bg-muted p-3 text-sm font-medium">
 							<div>Mã đơn hàng</div>
 							<div>Ngày đặt hàng</div>
 							<div>Tổng tiền</div>
 							<div>Trạng thái</div>
+							<div>Phương thức thanh toán</div>
 							<div className="text-center">Thao tác</div>
 						</div>
 
@@ -137,8 +142,8 @@ function OrdersList({ sessionToken }: { sessionToken: string }) {
 						<h3 className="text-lg font-medium">Không có đơn hàng nào</h3>
 						<p className="text-muted-foreground max-w-md">
 							{search || status
-								? "Không tìm thấy đơn hàng nào phù hợp với bộ lọc của bạn"
-								: "Bạn chưa có đơn hàng nào. Đơn hàng sẽ hiển thị ở đây khi có khách đặt hàng"}
+								? 'Không tìm thấy đơn hàng nào phù hợp với bộ lọc của bạn'
+								: 'Bạn chưa có đơn hàng nào. Đơn hàng sẽ hiển thị ở đây khi có khách đặt hàng'}
 						</p>
 					</div>
 				)}

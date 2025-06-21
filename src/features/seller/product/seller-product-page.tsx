@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Filter, Package, Plus } from 'lucide-react';
+import { Package, Plus } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -15,7 +15,7 @@ async function SellerProductPage() {
 	}
 
 	return (
-		<div className="max-w-7xl mx-auto p-4 md:p-6">
+		<div className="min-w-5xl mx-auto p-4 md:p-6">
 			{/* Header with stats cards */}
 			<div className="mb-8">
 				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -31,16 +31,12 @@ async function SellerProductPage() {
 					</div>
 
 					<div className="flex gap-2">
-						<Button variant="outline" size="sm">
-							<Filter className="mr-2 h-4 w-4" />
-							Bộ lọc
-						</Button>
-						<Button variant="outline" size="sm">
-							<Link href="/seller/product/add">
+						<Link href="/seller/product/add">
+							<Button variant="outline">
 								<Plus className="ml-2 h-4 w-4" />
 								Thêm sản phẩm
-							</Link>
-						</Button>
+							</Button>
+						</Link>
 					</div>
 				</div>
 			</div>

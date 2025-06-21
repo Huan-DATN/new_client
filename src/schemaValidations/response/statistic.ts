@@ -13,6 +13,38 @@ export const statisticResponseSchema = z.object({
 
 export type StatisticResponseType = z.infer<typeof statisticResponseSchema>;
 
+// Monthly statistics schema (daily data for a specific month)
+export const monthlyStatisticsResponseSchema = z.object({
+	data: z.array(
+		z.object({
+			date: z.string(),
+			revenue: z.number(),
+			orderCount: z.number(),
+		})
+	),
+	message: z.string(),
+});
+
+export type MonthlyStatisticsResponseType = z.infer<
+	typeof monthlyStatisticsResponseSchema
+>;
+
+// Yearly statistics schema (monthly data for a specific year)
+export const yearlyStatisticsResponseSchema = z.object({
+	data: z.array(
+		z.object({
+			date: z.string(),
+			'Đơn hàng': z.number(),
+			'Doanh thu': z.number(),
+		})
+	),
+	message: z.string(),
+});
+
+export type YearlyStatisticsResponseType = z.infer<
+	typeof yearlyStatisticsResponseSchema
+>;
+
 const StatisticDashboardResponseSchema = z.object({
 	data: z.object({
 		totalRevenue: z.object({
