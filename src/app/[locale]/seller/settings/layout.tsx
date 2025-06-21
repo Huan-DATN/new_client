@@ -6,15 +6,17 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Lock, User } from 'lucide-react';
+import { CreditCard, Lock, User } from 'lucide-react';
 
 export default function SettingsLayout({
 	profile,
 	password,
+	card,
 	children,
 }: {
 	profile: React.ReactNode;
 	password: React.ReactNode;
+	card: React.ReactNode;
 	children: React.ReactNode;
 }) {
 	return (
@@ -32,6 +34,10 @@ export default function SettingsLayout({
 					<TabsTrigger value="security" className="flex items-center gap-2">
 						<Lock className="h-4 w-4" />
 						<span className="hidden md:inline">Bảo mật</span>
+					</TabsTrigger>
+					<TabsTrigger value="card" className="flex items-center gap-2">
+						<CreditCard className="h-4 w-4" />
+						<span className="hidden md:inline">Chuyển khoản</span>
 					</TabsTrigger>
 				</TabsList>
 
@@ -56,6 +62,18 @@ export default function SettingsLayout({
 							</CardDescription>
 						</CardHeader>
 						<CardContent className="space-y-6">{password}</CardContent>
+					</Card>
+				</TabsContent>
+
+				<TabsContent value="card">
+					<Card>
+						<CardHeader>
+							<CardTitle>Thông tin chuyển khoản</CardTitle>
+							<CardDescription>
+								Quản lý thông tin chuyển khoản của bạn
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="space-y-6">{card}</CardContent>
 					</Card>
 				</TabsContent>
 			</Tabs>

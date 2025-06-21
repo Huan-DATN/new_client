@@ -56,15 +56,24 @@ function Layout({
 								{me}
 							</TabsContent>
 							<TabsContent value="password" className="mt-0">
-								{password || <div>Chức năng đổi mật khẩu sẽ được cập nhật sau.</div>}
+								{password || (
+									<div>Chức năng đổi mật khẩu sẽ được cập nhật sau.</div>
+								)}
 							</TabsContent>
 							<TabsContent value="orders" className="mt-0">
 								<div className="text-center py-8">
 									<ClipboardList className="mx-auto h-12 w-12 text-gray-400" />
-									<h3 className="mt-2 text-sm font-semibold text-gray-900">Chức năng xem lịch sử đơn hàng</h3>
-									<p className="mt-1 text-sm text-gray-500">Tính năng này sẽ sớm được cập nhật.</p>
+									<h3 className="mt-2 text-sm font-semibold text-gray-900">
+										Chức năng xem lịch sử đơn hàng
+									</h3>
+									<p className="mt-1 text-sm text-gray-500">
+										Tính năng này sẽ sớm được cập nhật.
+									</p>
 									<div className="mt-6">
-										<a href="/buyer/order/me" className="text-sm font-medium text-primary hover:text-primary/80">
+										<a
+											href="/buyer/order/me"
+											className="text-sm font-medium text-primary hover:text-primary/80"
+										>
 											Đi đến trang đơn hàng
 											<span aria-hidden="true"> &rarr;</span>
 										</a>

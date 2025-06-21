@@ -28,7 +28,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 
-// Define the validation schema for the profile form
 const profileSchema = z.object({
 	firstName: z.string().min(2, { message: 'Tên phải có ít nhất 2 ký tự.' }),
 	lastName: z.string().min(2, { message: 'Họ phải có ít nhất 2 ký tự.' }),
