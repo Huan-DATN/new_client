@@ -34,13 +34,21 @@ import { Camera, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import mediaRequest from '../../../api/mediaRequest';
+import userRequest from '../../../api/userRequest';
+import { handleErrorApi } from '../../../lib/utils';
+import {
+	CreateUserType,
+	UpdateUserType,
+} from '../../../schemaValidations/request/user';
 import { AccountFormValues, accountFormSchema } from './schemas';
 
 interface AccountFormModalProps {
 	account?: Account | null;
 	isOpen: boolean;
 	onClose: () => void;
-	onSubmit: (data: AccountFormValues) => void;
+	onSuccess: () => void;
+	sessionToken: string;
 	isSubmitting?: boolean;
 }
 
@@ -50,13 +58,15 @@ function AccountFormModal({
 	account,
 	isOpen,
 	onClose,
-	onSubmit,
-	isSubmitting = false,
+	onSuccess,
+	sessionToken,
 }: AccountFormModalProps) {
-	const [avatarUrl, setAvatarUrl] = useState<string | null>(
+	const isEditMode = !!account?.id;
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [selectedImage, setSelectedImage] = useState<File | null>(null);
+	const [previewUrl, setPreviewUrl] = useState<string | null>(
 		account?.image?.publicUrl || null
 	);
-	const isEditMode = !!account?.id;
 
 	const form = useForm<AccountFormValues>({
 		resolver: zodResolver(accountFormSchema),
@@ -66,6 +76,7 @@ function AccountFormModal({
 			email: account?.email || '',
 			phone: account?.phone || '',
 			address: account?.address || '',
+			shopName: account?.shopName || '',
 			role: (account?.role as 'ADMIN' | 'SELLER' | 'BUYER') || 'BUYER',
 			isActive: account?.isActive !== undefined ? account.isActive : true,
 		},
@@ -84,7 +95,7 @@ function AccountFormModal({
 				role: account.role as 'ADMIN' | 'SELLER' | 'BUYER',
 				isActive: account.isActive !== undefined ? account.isActive : true,
 			});
-			setAvatarUrl(account.image?.publicUrl || null);
+			setPreviewUrl(account.image?.publicUrl || null);
 		} else if (!isOpen) {
 			// When closing the modal, reset to empty form
 			form.reset({
@@ -94,23 +105,84 @@ function AccountFormModal({
 				phone: '',
 				address: '',
 				role: 'BUYER',
+				shopName: '',
 				isActive: true,
 			});
-			setAvatarUrl(null);
+			setPreviewUrl(null);
 		}
 	}, [isOpen, account, form]);
 
-	const handleFormSubmit = (values: AccountFormValues) => {
-		onSubmit(values);
+	const handleFormSubmit = async (values: AccountFormValues) => {
+		setIsSubmitting(true);
+		try {
+			let imageId = account?.image?.id || 0;
+
+			// Upload image if a new one is selected
+			if (selectedImage) {
+				const formData = new FormData();
+				formData.append('image', selectedImage);
+				const uploadResponse = await mediaRequest.uploadImage(formData);
+				imageId = uploadResponse.payload.data.id;
+			}
+
+			if (account) {
+				const updateData: UpdateUserType = {
+					imageId,
+					firstName: values.firstName,
+					lastName: values.lastName,
+					phone: values.phone,
+					address: values.address,
+					isActive: values.isActive,
+					shopName: values.shopName,
+					role: values.role,
+				};
+
+				if (imageId !== account.image?.id) {
+					updateData.imageId = imageId;
+				}
+
+				const response = await userRequest.updateUser(
+					sessionToken,
+					account.id,
+					updateData
+				);
+				onSuccess();
+			} else {
+				// Create new account
+				const createData: CreateUserType = {
+					firstName: values.firstName,
+					lastName: values.lastName,
+					email: values.email,
+					password: values.password || '',
+					role: values.role,
+					shopName: values.shopName || '',
+					phone: values.phone || '',
+					address: values.address || '',
+					isActive: values.isActive,
+					imageId: imageId === 0 ? undefined : imageId,
+				};
+
+				const response = await userRequest.createUser(sessionToken, createData);
+				onSuccess();
+			}
+		} catch (error) {
+			handleErrorApi({
+				error,
+			});
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
-			// In a real implementation, this would upload the file to a server
-			// and get back a URL to display
-			const tempUrl = URL.createObjectURL(file);
-			setAvatarUrl(tempUrl);
+			setSelectedImage(file);
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setPreviewUrl(reader.result as string);
+			};
+			reader.readAsDataURL(file);
 		}
 	};
 
@@ -136,7 +208,7 @@ function AccountFormModal({
 				<div className="flex justify-center my-4">
 					<div className="relative">
 						<Avatar className="h-24 w-24">
-							<AvatarImage src={avatarUrl || ''} />
+							<AvatarImage src={previewUrl || ''} />
 							<AvatarFallback className="bg-primary/10 text-primary text-xl">
 								{form.watch('firstName')?.charAt(0) || ''}
 								{form.watch('lastName')?.charAt(0) || ''}
@@ -152,7 +224,7 @@ function AccountFormModal({
 								type="file"
 								accept="image/*"
 								className="hidden"
-								onChange={handleFileChange}
+								onChange={handleImageChange}
 							/>
 						</label>
 					</div>
@@ -242,6 +314,20 @@ function AccountFormModal({
 											{...field}
 											value={field.value || ''}
 										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="shopName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Tên cửa hàng</FormLabel>
+									<FormControl>
+										<Input placeholder="Nhập tên cửa hàng" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

@@ -1,18 +1,9 @@
 import productRequest from '@/api/productRequest';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-	Calendar,
-	Clipboard,
-	Edit,
-	MessageCircle,
-	Package,
-	Tag,
-	Trash,
-} from 'lucide-react';
+import { Calendar, Package } from 'lucide-react';
 import Image from 'next/image';
 import RatingsSection from './ratings-section';
 // Define image type to avoid implicit any
@@ -51,7 +42,7 @@ async function ProductDetailPage({
 	};
 
 	return (
-		<div className="min-w-7xl mx-auto p-4 md:p-6">
+		<div className="min-w-5xl mx-auto p-4 md:p-6">
 			{/* Breadcrumb */}
 			<div className="mb-6">
 				<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -110,7 +101,7 @@ async function ProductDetailPage({
 							<TabsTrigger value="reviews">Đánh giá</TabsTrigger>
 						</TabsList>
 
-						<TabsContent value="details" className="space-y-4">
+						<TabsContent value="details" className="space-y-4 w-full">
 							<Card>
 								<CardHeader className="pb-3">
 									<h3 className="text-lg font-semibold">Thông tin cơ bản</h3>
@@ -198,12 +189,12 @@ async function ProductDetailPage({
 							</Card>
 						</TabsContent>
 
-						<TabsContent value="inventory" className="space-y-4">
-							<Card>
+						<TabsContent value="inventory" className="space-y-4 w-full">
+							<Card className="w-full">
 								<CardHeader className="pb-3">
 									<h3 className="text-lg font-semibold">Thông tin kho hàng</h3>
 								</CardHeader>
-								<CardContent>
+								<CardContent className="w-full">
 									<dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
 										<div className="bg-gray-50 p-4 rounded-lg">
 											<dt className="text-sm text-gray-500 mb-1">
@@ -250,34 +241,6 @@ async function ProductDetailPage({
 								<span className="text-gray-500">Tồn kho</span>
 								<span className="font-medium">{product.quantity} sản phẩm</span>
 							</div>
-						</CardContent>
-					</Card>
-
-					<Card>
-						<CardHeader className="pb-3">
-							<h3 className="text-lg font-semibold">Thao tác nhanh</h3>
-						</CardHeader>
-						<CardContent className="flex flex-col gap-3">
-							<Button variant="outline" className="justify-start">
-								<Edit className="mr-2 h-4 w-4" />
-								Chỉnh sửa sản phẩm
-							</Button>
-							<Button variant="outline" className="justify-start">
-								<Tag className="mr-2 h-4 w-4" />
-								Thêm biến thể
-							</Button>
-							<Button variant="outline" className="justify-start">
-								<MessageCircle className="mr-2 h-4 w-4" />
-								Xem hỏi đáp
-							</Button>
-							<Button variant="outline" className="justify-start">
-								<Clipboard className="mr-2 h-4 w-4" />
-								Sao chép sản phẩm
-							</Button>
-							<Button variant="outline" className="justify-start text-red-600">
-								<Trash className="mr-2 h-4 w-4" />
-								Xóa sản phẩm
-							</Button>
 						</CardContent>
 					</Card>
 				</div>

@@ -1,6 +1,10 @@
 import { RoleEnum } from '../constants/roleEnum';
 import http from '../lib/http';
 import { UpdateBuyerMeBodyType } from '../schemaValidations/request/account';
+import {
+	CreateUserType,
+	UpdateUserType,
+} from '../schemaValidations/request/user';
 import { AccountResType } from '../schemaValidations/response/account';
 import {
 	ShopResType,
@@ -50,7 +54,11 @@ const userRequest = {
 	getAllUsers: (
 		sessionToken: string,
 		isActive: boolean | undefined = undefined,
-		role: RoleEnum | undefined = undefined
+		role: RoleEnum | undefined = undefined,
+		page: number = 1,
+		search: string | undefined = undefined,
+		orderBy: string | undefined = undefined,
+		order: string | undefined = undefined
 	) => {
 		let url = `/user`;
 		const params = new URLSearchParams();
@@ -63,21 +71,41 @@ const userRequest = {
 			params.append('role', role);
 		}
 
+		if (page !== undefined) {
+			params.append('page', page.toString());
+		}
+
+		if (search !== undefined) {
+			params.append('search', search);
+		}
+
+		if (orderBy !== undefined) {
+			params.append('orderBy', orderBy);
+		}
+
+		if (order !== undefined) {
+			params.append('order', order);
+		}
+
 		if (params.toString()) {
 			url += `?${params.toString()}`;
 		}
+
 		return http.get<UserListResType>(url, {
 			headers: {
 				Authorization: `Bearer ${sessionToken}`,
 			},
 		});
 	},
-	updateUser: (
-		sessionToken: string,
-		id: number,
-		data: UpdateBuyerMeBodyType
-	) => {
+	updateUser: (sessionToken: string, id: number, data: UpdateUserType) => {
 		return http.put<AccountResType>(`/user/${id}`, data, {
+			headers: {
+				Authorization: `Bearer ${sessionToken}`,
+			},
+		});
+	},
+	createUser: (sessionToken: string, data: CreateUserType) => {
+		return http.post<AccountResType>(`/user`, data, {
 			headers: {
 				Authorization: `Bearer ${sessionToken}`,
 			},

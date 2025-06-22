@@ -7,8 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '../../../components/ui/card';
-import { Progress } from '../../../components/ui/progress';
-import { cn } from '../../../lib/utils';
+import { DonutChart } from '../../../components/ui/donut-chart';
 import { AdminDashboardSystemResType } from '../../../schemaValidations/response/statistic';
 
 function AdminDashboardStats({
@@ -97,123 +96,81 @@ function AdminDashboardStats({
 			</section>
 
 			{/* Shop Stats */}
-			<section>
-				<h2 className="text-2xl font-bold mb-4">Thống kê cửa hàng</h2>
-				<Card>
-					<CardHeader>
-						<CardTitle>Trạng thái cửa hàng</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className="space-y-4">
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-sm font-medium">
-										Tổng số: {formatNumber(data.shops.total)}
-									</p>
-								</div>
-								<div className="text-sm text-muted-foreground">100%</div>
-							</div>
-							<div className="space-y-2">
+			<section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<div>
+					<h2 className="text-2xl font-bold mb-4">Thống kê cửa hàng</h2>
+					<Card>
+						<CardHeader>
+							<CardTitle>Trạng thái cửa hàng</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<div className="space-y-4">
 								<div className="flex items-center justify-between">
-									<div className="flex items-center">
-										<div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-										<p className="text-sm">Đang hoạt động</p>
-									</div>
-									<div className="text-sm font-medium">
-										{formatNumber(data.shops.active)} (
-										{((data.shops.active / data.shops.total) * 100).toFixed(1)}
-										%)
+									<div>
+										<p className="text-sm font-medium">
+											Tổng số: {formatNumber(data.shops.total)}
+										</p>
 									</div>
 								</div>
-								<Progress
-									value={(data.shops.active / data.shops.total) * 100}
-									className={cn('h-2 [&>div]:bg-green-500')}
+								<DonutChart
+									className="mx-auto"
+									data={[
+										{
+											name: 'Đang hoạt động',
+											amount: data.shops.active,
+										},
+										{
+											name: 'Không hoạt động',
+											amount: data.shops.inactive,
+										},
+									]}
+									category="name"
+									value="amount"
+									showLabel
 								/>
 							</div>
-							<div className="space-y-2">
-								<div className="flex items-center justify-between">
-									<div className="flex items-center">
-										<div className="w-2 h-2 rounded-full bg-red-500 mr-2"></div>
-										<p className="text-sm">Không hoạt động</p>
-									</div>
-									<div className="text-sm font-medium">
-										{formatNumber(data.shops.inactive)} (
-										{((data.shops.inactive / data.shops.total) * 100).toFixed(
-											1
-										)}
-										%)
-									</div>
-								</div>
-								<Progress
-									value={(data.shops.inactive / data.shops.total) * 100}
-									className={cn('h-2 [&>div]:bg-red-500')}
-								/>
-							</div>
-						</div>
-					</CardContent>
-				</Card>
-			</section>
+						</CardContent>
+					</Card>
+				</div>
 
-			{/* Product Stats */}
-			<section>
-				<h2 className="text-2xl font-bold mb-4">Thống kê sản phẩm</h2>
-				<Card>
-					<CardHeader>
-						<CardTitle>Trạng thái sản phẩm</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className="space-y-4">
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-sm font-medium">
-										Tổng số: {formatNumber(data.products.total)}
-									</p>
-								</div>
-								<div className="text-sm text-muted-foreground">100%</div>
-							</div>
-							<div className="space-y-2">
+				{/* Product Stats */}
+				<div>
+					<h2 className="text-2xl font-bold mb-4">Thống kê sản phẩm</h2>
+					<Card>
+						<CardHeader>
+							<CardTitle>Trạng thái sản phẩm</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<div className="space-y-4">
 								<div className="flex items-center justify-between">
-									<div className="flex items-center">
-										<div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-										<p className="text-sm">Đang bán</p>
+									<div>
+										<p className="text-sm font-medium">
+											Tổng số: {formatNumber(data.products.total)}
+										</p>
 									</div>
-									<div className="text-sm font-medium">
-										{formatNumber(data.products.active)} (
-										{(
-											(data.products.active / data.products.total) *
-											100
-										).toFixed(1)}
-										%)
-									</div>
+									<div className="text-sm text-muted-foreground">100%</div>
 								</div>
-								<Progress
-									value={(data.products.active / data.products.total) * 100}
-									className={cn('h-2 [&>div]:bg-green-500')}
+								<DonutChart
+									className="mx-auto"
+									data={[
+										{
+											name: 'Đang bán',
+											amount: data.products.active,
+										},
+										{
+											name: 'Đã ẩn',
+											amount: data.products.inactive,
+										},
+									]}
+									category="name"
+									value="amount"
+									showLabel
+									showTooltip
 								/>
 							</div>
-							<div className="space-y-2">
-								<div className="flex items-center justify-between">
-									<div className="flex items-center">
-										<div className="w-2 h-2 rounded-full bg-red-500 mr-2"></div>
-										<p className="text-sm">Ngừng bán</p>
-									</div>
-									<div className="text-sm font-medium">
-										{formatNumber(data.products.inactive)} (
-										{(
-											(data.products.inactive / data.products.total) *
-											100
-										).toFixed(1)}
-										%)
-									</div>
-								</div>
-								<Progress
-									value={(data.products.inactive / data.products.total) * 100}
-									className={cn('h-2 [&>div]:bg-red-500')}
-								/>
-							</div>
-						</div>
-					</CardContent>
-				</Card>
+						</CardContent>
+					</Card>
+				</div>
 			</section>
 
 			{/* Order Stats */}
@@ -247,50 +204,6 @@ function AdminDashboardStats({
 						</CardContent>
 					</Card>
 				</div>
-			</section>
-
-			{/* Order Status Breakdown */}
-			<section>
-				<Card>
-					<CardHeader>
-						<CardTitle>Trạng thái đơn hàng</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className="space-y-4">
-							{data.orders.byStatus.map((status, index) => {
-								const statusColors = statusColorMap[status.statusType] || {
-									dot: 'bg-blue-500',
-									progress: '[&>div]:bg-blue-500',
-								};
-
-								return (
-									<div key={index} className="space-y-2">
-										<div className="flex items-center justify-between">
-											<div className="flex items-center">
-												<div
-													className={cn(
-														'w-2 h-2 rounded-full mr-2',
-														statusColors.dot
-													)}
-												></div>
-												<p className="text-sm">{status.statusName}</p>
-											</div>
-											<div className="text-sm font-medium">
-												{formatNumber(status.count)} (
-												{((status.count / data.orders.total) * 100).toFixed(1)}
-												%)
-											</div>
-										</div>
-										<Progress
-											value={(status.count / data.orders.total) * 100}
-											className={cn('h-2', statusColors.progress)}
-										/>
-									</div>
-								);
-							})}
-						</div>
-					</CardContent>
-				</Card>
 			</section>
 		</div>
 	);

@@ -9,6 +9,7 @@ export const accountFormSchema = z.object({
 	phone: z.string().optional(),
 	address: z.string().optional(),
 	role: z.enum(['ADMIN', 'SELLER', 'BUYER']),
+	shopName: z.string().optional(),
 	isActive: z.boolean(),
 });
 
