@@ -117,7 +117,7 @@ function ProductCard({ data }: { data: ProductListResType['data'][number] }) {
 
 			{/* Product Information */}
 			<CardContent className="p-4">
-				<div className="space-y-2">
+				<div className="space-y-2 min-h-[100px]">
 					<div className="flex items-start justify-between">
 						<h3 className="font-medium text-sm line-clamp-2" title={data.name}>
 							{data.name}
@@ -145,7 +145,7 @@ function ProductCard({ data }: { data: ProductListResType['data'][number] }) {
 						</div>
 					</div>
 
-					<div className="flex justify-between items-center text-xs">
+					<div className="flex justify-between items-center text-xs ">
 						<div className="text-gray-500">
 							{data.groupProduct ? data.groupProduct.name : 'Chưa phân loại'}
 						</div>

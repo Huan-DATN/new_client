@@ -15,7 +15,7 @@ async function SellerProductPage() {
 	}
 
 	return (
-		<div className="min-w-5xl mx-auto p-4 md:p-6">
+		<div className="min-w-full mx-auto p-4 md:p-6">
 			{/* Header with stats cards */}
 			<div className="mb-8">
 				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">

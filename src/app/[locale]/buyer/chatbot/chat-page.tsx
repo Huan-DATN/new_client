@@ -65,10 +65,17 @@ export default function ChatPage({ sessionToken }: { sessionToken: string }) {
 	// Handle sending a new message
 	const handleSendMessage = async (message: string) => {
 		try {
-			// Start the stream for the new message
+			// Prevent starting a new stream if one is already active
+			if (isStreaming) {
+				toast({
+					title: 'Đang xử lý',
+					description: 'Vui lòng chờ phản hồi trước khi gửi tin nhắn mới.',
+					variant: 'destructive',
+				});
+				return;
+			}
 			await startStream(message);
 
-			// Scroll to bottom
 			messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 		} catch (error) {
 			console.error('Error sending message:', error);
@@ -88,7 +95,7 @@ export default function ChatPage({ sessionToken }: { sessionToken: string }) {
 	// Load conversations on mount and when search params change
 	useEffect(() => {
 		fetchConversations();
-	}, [searchParams]);
+	}, [searchParams, router]);
 
 	return (
 		<div className="flex h-[calc(100vh-80px)] max-w-7xl mx-auto shadow-lg">

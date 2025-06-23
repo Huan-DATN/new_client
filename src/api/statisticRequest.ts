@@ -1,6 +1,7 @@
 import http from '../lib/http';
 import {
 	AdminDashboardSystemResType,
+	AdminUserMonthlyStatisticsResponseType,
 	MonthlyStatisticsResponseType,
 	StatisticDashboardResponseSchemaType,
 	StatisticResponseType,
@@ -75,6 +76,24 @@ const statisticRequest = {
 				},
 			}
 		);
+	},
+	getAdminUserMonthlyStatistics: (
+		sessionToken: string,
+		{ year }: { year: number }
+	) => {
+		const query = new URLSearchParams();
+
+		if (year) {
+			query.append('year', year.toString());
+		}
+
+		const url = `/statistic/admin/user/monthly?${query.toString()}`;
+
+		return http.get<AdminUserMonthlyStatisticsResponseType>(url, {
+			headers: {
+				Authorization: `Bearer ${sessionToken}`,
+			},
+		});
 	},
 };
 

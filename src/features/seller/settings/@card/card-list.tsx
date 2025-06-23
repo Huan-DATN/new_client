@@ -151,9 +151,7 @@ export function CardList({ cards: initialCards, sessionToken }: CardListProps) {
 							<CardContent>
 								<div className="flex flex-col space-y-4">
 									<div className="flex items-center space-x-2">
-										<p className="font-mono">
-											{card.accountNumber.replace(/(\d{4})/g, '$1 ').trim()}
-										</p>
+										<p className="font-bold">{card.accountNumber}</p>
 									</div>
 									<div className="flex justify-center">
 										<img
@@ -206,9 +204,9 @@ export function CardList({ cards: initialCards, sessionToken }: CardListProps) {
 			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
-						<DialogTitle>Edit Card</DialogTitle>
+						<DialogTitle>Chỉnh sửa chuyển khoản</DialogTitle>
 						<DialogDescription>
-							Update your card details below.
+							Chỉnh sửa thông tin chuyển khoản của bạn dưới đây.
 						</DialogDescription>
 					</DialogHeader>
 					{selectedCard && (

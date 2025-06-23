@@ -98,7 +98,7 @@ function ProductCard({ data }: { data: ProductListResType['data'][number] }) {
 
 			{/* Product Information */}
 			<CardContent className="p-4">
-				<div className="space-y-2">
+				<div className="space-y-2 min-h-[100px]">
 					<div className="flex items-start justify-between">
 						<h3 className="font-medium text-sm line-clamp-2" title={data.name}>
 							{data.name}

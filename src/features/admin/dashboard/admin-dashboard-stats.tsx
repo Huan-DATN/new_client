@@ -9,11 +9,14 @@ import {
 } from '../../../components/ui/card';
 import { DonutChart } from '../../../components/ui/donut-chart';
 import { AdminDashboardSystemResType } from '../../../schemaValidations/response/statistic';
+import UserYearlyLineChart from './user-yearly-line-chart';
 
 function AdminDashboardStats({
 	data,
+	sessionToken,
 }: {
 	data: AdminDashboardSystemResType['data'];
+	sessionToken: string;
 }) {
 	// Format number with commas as thousand separators
 	const formatNumber = (num: number) => {
@@ -26,16 +29,6 @@ function AdminDashboardStats({
 			style: 'currency',
 			currency: 'VND',
 		}).format(amount);
-	};
-
-	// Status color mapping
-	const statusColorMap: Record<string, { dot: string; progress: string }> = {
-		PENDING: { dot: 'bg-yellow-500', progress: '[&>div]:bg-yellow-500' },
-		CONFIRMED: { dot: 'bg-blue-500', progress: '[&>div]:bg-blue-500' },
-		PROCESSING: { dot: 'bg-indigo-500', progress: '[&>div]:bg-indigo-500' },
-		SHIPPED: { dot: 'bg-violet-500', progress: '[&>div]:bg-violet-500' },
-		DELIVERED: { dot: 'bg-green-500', progress: '[&>div]:bg-green-500' },
-		CANCELLED: { dot: 'bg-red-500', progress: '[&>div]:bg-red-500' },
 	};
 
 	return (
@@ -93,6 +86,14 @@ function AdminDashboardStats({
 						</CardContent>
 					</Card>
 				</div>
+			</section>
+
+			<section>
+				<UserYearlyLineChart
+					sessionToken={sessionToken}
+					year={new Date().getFullYear()}
+					onValueChange={() => {}}
+				/>
 			</section>
 
 			{/* Shop Stats */}

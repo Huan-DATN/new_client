@@ -33,7 +33,7 @@ function AdminDashboard({
 			</div>
 
 			{/* Main Dashboard Stats */}
-			<AdminDashboardStats data={data} />
+			<AdminDashboardStats data={data} sessionToken={sessionToken} />
 		</div>
 	);
 }

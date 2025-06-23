@@ -110,8 +110,8 @@ export function ChatSidebar({
 	};
 
 	return (
-		<>
-			<div className="flex flex-col h-full">
+		<div className="h-full">
+			<div className="flex flex-col h-full w-full">
 				<div className="p-4 border-b">
 					<Button
 						onClick={startNewChat}
@@ -251,6 +251,6 @@ export function ChatSidebar({
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
-		</>
+		</div>
 	);
 }

@@ -117,7 +117,7 @@ export default function BankTransfer({
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className="sm:max-w-md">
+			<DialogContent className="sm:max-w-md max-h-[90vh] overflow-auto">
 				<DialogHeader>
 					<DialogTitle className="text-center">
 						Thanh toán chuyển khoản
@@ -161,13 +161,15 @@ export default function BankTransfer({
 												}).format(amount)}
 											</span>
 										</p>
-										<Image
-											src={card.image.publicUrl}
-											alt={card.bankName}
-											className="object-contain"
-											width={10000}
-											height={10000}
-										/>
+										<div className="relative w-full h-auto aspect-[2/1] my-2">
+											<Image
+												src={card.image.publicUrl}
+												alt={card.bankName}
+												className="object-contain rounded-md border"
+												width={400}
+												height={100}
+											/>
+										</div>
 										<p className="text-xs text-muted-foreground italic">
 											Nội dung CK: Thanh toán đơn hàng #{orderId}
 										</p>
@@ -191,11 +193,12 @@ export default function BankTransfer({
                     hover:file:bg-primary/90"
 								/>
 								{previewUrl && (
-									<div className="mt-2 relative h-40 w-full">
+									<div className="mt-2 relative w-full h-auto aspect-[2/1]">
 										<Image
 											src={previewUrl}
 											alt="Payment proof"
 											fill
+											sizes="(max-width: 768px) 100vw, 400px"
 											className="object-contain rounded-md border"
 										/>
 									</div>

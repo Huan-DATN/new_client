@@ -106,3 +106,18 @@ export const AdminDashboardSystemRes = z.object({
 export type AdminDashboardSystemResType = z.infer<
 	typeof AdminDashboardSystemRes
 >;
+
+export const AdminUserMonthlyStatisticsResponseSchema = z.object({
+	data: z.array(
+		z.object({
+			month: z.string(),
+			'Người mua': z.number(),
+			'Người bán': z.number(),
+			'Quản trị viên': z.number(),
+		})
+	),
+});
+
+export type AdminUserMonthlyStatisticsResponseType = z.infer<
+	typeof AdminUserMonthlyStatisticsResponseSchema
+>;

@@ -12,7 +12,8 @@ import http from '../lib/http';
 const productRequest = {
 	getList: (
 		{ page, limit }: PaginationReqType,
-		{ name, cityId, groupProductId }: SearchProductQueryType
+		{ name, cityId, groupProductId }: SearchProductQueryType,
+		{ minPrice, maxPrice }: SearchProductQueryType
 	) => {
 		let url = `/products`;
 
@@ -35,6 +36,14 @@ const productRequest = {
 
 		if (limit) {
 			params.append('limit', limit.toString());
+		}
+
+		if (minPrice) {
+			params.append('minPrice', minPrice.toString());
+		}
+
+		if (maxPrice) {
+			params.append('maxPrice', maxPrice.toString());
 		}
 
 		if (params.toString()) {

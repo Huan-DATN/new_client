@@ -1,7 +1,6 @@
 'use client';
 import productRequest from '@/api/productRequest';
 import ProductsGrid from '@/components/products-grid';
-import { Grid, List } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ProductsPagination from './products-pagination';
@@ -11,6 +10,8 @@ function ProductsGridSection() {
 	const checkedCityId = params.get('cityId') || undefined;
 	const checkedGroupProductId = params.get('groupProductId') || undefined;
 	const checkedName = params.get('name') || undefined;
+	const checkedMinPrice = params.get('minPrice') || undefined;
+	const checkedMaxPrice = params.get('maxPrice') || undefined;
 	const checkedPage = params.get('page') || null;
 
 	const [products, setProducts] = useState([]);
@@ -29,6 +30,10 @@ function ProductsGridSection() {
 						name: checkedName,
 						cityId: Number(checkedCityId),
 						groupProductId: Number(checkedGroupProductId),
+					},
+					{
+						minPrice: Number(checkedMinPrice),
+						maxPrice: Number(checkedMaxPrice),
 					}
 				);
 
@@ -42,7 +47,14 @@ function ProductsGridSection() {
 			}
 		}
 		fetchData();
-	}, [checkedCityId, checkedGroupProductId, checkedName, checkedPage]);
+	}, [
+		checkedCityId,
+		checkedGroupProductId,
+		checkedName,
+		checkedPage,
+		checkedMinPrice,
+		checkedMaxPrice,
+	]);
 
 	// Column count based on display mode (more columns in compact mode)
 	const gridCols = displayMode === 'compact' ? 4 : 3;
@@ -53,25 +65,9 @@ function ProductsGridSection() {
 			<div className="flex justify-between items-center border-b border-gray-200 pb-4">
 				<div>
 					<p className="text-sm text-gray-700">
-						Hiển thị <span className="font-medium">{products.length}</span> trên tổng số <span className="font-medium">{totalItems}</span> sản phẩm
+						Hiển thị <span className="font-medium">{products.length}</span> trên
+						tổng số <span className="font-medium">{totalItems}</span> sản phẩm
 					</p>
-				</div>
-
-				<div className="flex items-center space-x-2">
-					<button
-						className={`p-1.5 rounded-md ${displayMode === 'grid' ? 'bg-green-50 text-green-700' : 'text-gray-500 hover:bg-gray-100'}`}
-						onClick={() => setDisplayMode('grid')}
-						title="Hiển thị lưới"
-					>
-						<Grid size={18} />
-					</button>
-					<button
-						className={`p-1.5 rounded-md ${displayMode === 'compact' ? 'bg-green-50 text-green-700' : 'text-gray-500 hover:bg-gray-100'}`}
-						onClick={() => setDisplayMode('compact')}
-						title="Hiển thị nhỏ gọn"
-					>
-						<List size={18} />
-					</button>
 				</div>
 			</div>
 

@@ -163,16 +163,17 @@ async function OrderDetail({ id }: { id: number }) {
 										</Badge>
 									)}
 								</div>
-
-								<div className="flex items-center gap-2">
-									<Image
-										src={payload.data.payment?.image?.publicUrl || ''}
-										alt="Bank Transfer"
-										width={300}
-										height={300}
-										className="object-contain"
-									/>
-								</div>
+								{payload.data.paymentMethod === 'BANK_TRANSFER' && (
+									<div className="flex items-center gap-2">
+										<Image
+											src={payload.data.payment?.image?.publicUrl || ''}
+											alt="Bank Transfer"
+											width={300}
+											height={300}
+											className="object-contain"
+										/>
+									</div>
+								)}
 							</div>
 						</CardContent>
 					</Card>

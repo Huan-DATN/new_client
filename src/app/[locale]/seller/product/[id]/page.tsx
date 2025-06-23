@@ -1,9 +1,17 @@
-import ProductDetail from '@/features/buyer/products/detail/product-detail';
+import ProductDetailPage from '@/features/seller/product/[id]/product-detail-page';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-function Page({ params }: { params: { id: string } }) {
+async function Page({ params }: { params: { id: string } }) {
+	const sessionToken = (await cookies()).get('sessionToken')?.value;
+
+	if (!sessionToken) {
+		redirect('/auth/login');
+	}
+
 	return (
 		<div className="flex flex-col gap-4">
-			<ProductDetail id={params.id} />
+			<ProductDetailPage sessionToken={sessionToken} />
 		</div>
 	);
 }
