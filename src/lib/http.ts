@@ -90,8 +90,11 @@ const request = async <Response>(
 		[key: string]: string;
 	} =
 		body instanceof FormData
-			? {}
+			? {
+					'ngrok-skip-browser-warning': 'true',
+			  }
 			: {
+					'ngrok-skip-browser-warning': 'true',
 					'Content-Type': 'application/json',
 			  };
 
