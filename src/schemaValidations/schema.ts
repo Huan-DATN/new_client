@@ -117,6 +117,7 @@ export const OrderDetailSchema = z.object({
 	total: z.number(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
+	isCommented: z.boolean().default(false),
 
 	shop: z.object({
 		id: z.number().int(),

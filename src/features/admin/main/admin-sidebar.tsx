@@ -42,7 +42,7 @@ const items = [
 		icon: Folder,
 	},
 	{
-		title: 'Carousel',
+		title: 'Banner',
 		url: '/admin/carousel',
 		icon: ImageIcon,
 	},

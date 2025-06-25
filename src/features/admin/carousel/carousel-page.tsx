@@ -71,8 +71,8 @@ export default function CarouselManagement({
 		} catch (error) {
 			console.error('Error fetching carousel items:', error);
 			toast({
-				title: 'Error',
-				description: 'Failed to load carousel items',
+				title: 'Thất bại',
+				description: 'Không thể tải danh sách carousel',
 				variant: 'destructive',
 			});
 		} finally {
@@ -107,8 +107,8 @@ export default function CarouselManagement({
 			await carouselRequest.createCarousel(sessionToken, formData);
 
 			toast({
-				title: 'Success',
-				description: 'Carousel item added successfully',
+				title: 'Thành công',
+				description: 'Thêm carousel thành công',
 			});
 
 			setIsAddDialogOpen(false);
@@ -116,8 +116,8 @@ export default function CarouselManagement({
 		} catch (error) {
 			console.error('Error adding carousel item:', error);
 			toast({
-				title: 'Error',
-				description: 'Failed to add carousel item',
+				title: 'Thất bại',
+				description: 'Thêm carousel thất bại',
 				variant: 'destructive',
 			});
 		} finally {
@@ -138,8 +138,8 @@ export default function CarouselManagement({
 			);
 
 			toast({
-				title: 'Success',
-				description: 'Carousel item updated successfully',
+				title: 'Thành công',
+				description: 'Cập nhật carousel thành công',
 			});
 
 			setIsEditDialogOpen(false);
@@ -147,8 +147,8 @@ export default function CarouselManagement({
 		} catch (error) {
 			console.error('Error updating carousel item:', error);
 			toast({
-				title: 'Error',
-				description: 'Failed to update carousel item',
+				title: 'Thất bại',
+				description: 'Cập nhật carousel thất bại',
 				variant: 'destructive',
 			});
 		} finally {
@@ -164,8 +164,8 @@ export default function CarouselManagement({
 			await carouselRequest.deleteCarousel(sessionToken, currentItem.id);
 
 			toast({
-				title: 'Success',
-				description: 'Carousel item deleted successfully',
+				title: 'Thành công',
+				description: 'Xóa carousel thành công',
 			});
 
 			setIsDeleteDialogOpen(false);
@@ -173,8 +173,8 @@ export default function CarouselManagement({
 		} catch (error) {
 			console.error('Error deleting carousel item:', error);
 			toast({
-				title: 'Error',
-				description: 'Failed to delete carousel item',
+				title: 'Thất bại',
+				description: 'Xóa carousel thất bại',
 				variant: 'destructive',
 			});
 		}
@@ -188,18 +188,18 @@ export default function CarouselManagement({
 			await carouselRequest.toggleCarousel(sessionToken, id, !currentStatus);
 
 			toast({
-				title: 'Success',
-				description: `Carousel item ${
-					!currentStatus ? 'activated' : 'deactivated'
-				} successfully`,
+				title: 'Thành công',
+				description: `Carousel ${
+					!currentStatus ? 'kích hoạt' : 'vô hiệu hóa'
+				} thành công`,
 			});
 
 			fetchCarouselItems();
 		} catch (error) {
 			console.error('Error updating status:', error);
 			toast({
-				title: 'Error',
-				description: 'Failed to update status',
+				title: 'Thất bại',
+				description: 'Cập nhật trạng thái thất bại',
 				variant: 'destructive',
 			});
 		}

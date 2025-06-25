@@ -92,10 +92,16 @@ const request = async <Response>(
 		body instanceof FormData
 			? {
 					'ngrok-skip-browser-warning': 'true',
+					'Cache-Control': 'no-cache, no-store, must-revalidate',
+					Pragma: 'no-cache',
+					Expires: '0',
 			  }
 			: {
 					'ngrok-skip-browser-warning': 'true',
 					'Content-Type': 'application/json',
+					'Cache-Control': 'no-cache, no-store, must-revalidate',
+					Pragma: 'no-cache',
+					Expires: '0',
 			  };
 
 	if (isClient()) {

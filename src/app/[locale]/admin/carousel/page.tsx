@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import CarouselManagement from './carousel-page';
+import CarouselManagement from '../../../../features/admin/carousel/carousel-page';
 
 async function Page() {
 	const sessionToken = (await cookies()).get('sessionToken')?.value;

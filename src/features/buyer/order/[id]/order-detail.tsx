@@ -24,7 +24,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import OrderStatusBadge from '../order-status-badge';
 import ConfirmButton from './confirm-button';
-import { DialogDemo } from './ratings-dialog';
+import RatingsDialog from './ratings-dialog';
 
 async function OrderDetail({ id }: { id: number }) {
 	const response = await orderRequest.getOrderDetail(id);
@@ -38,10 +38,13 @@ async function OrderDetail({ id }: { id: number }) {
 
 	// Determine action buttons based on order status
 	const renderActionButton = () => {
-		if (checkCompletedOrder(payload.data.OrderStatus)) {
+		if (
+			checkCompletedOrder(payload.data.OrderStatus) &&
+			!payload.data.isCommented
+		) {
 			return (
 				<div className="flex gap-3">
-					<DialogDemo
+					<RatingsDialog
 						items={payload.data.items}
 						orderId={id}
 						sessionToken={sessionToken}
