@@ -1,16 +1,15 @@
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { getPriceFormat } from '@/lib/utils';
 import { CartType } from '@/schemaValidations/response/cart';
-import { Minus, MoreVertical, Plus, Store, Trash2 } from 'lucide-react';
+import { MoreVertical, ShoppingCart, Store, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -21,7 +20,6 @@ function CartGroupShop({ data }: { data: CartType }) {
 				<div className="flex items-center gap-2">
 					<Store size={18} className="text-gray-500" />
 					<h3 className="font-medium">{data.shop?.shopName || 'Shop'}</h3>
-					<Badge variant="outline" className="text-xs ml-1">{data.shop?.address || 'Địa chỉ'}</Badge>
 				</div>
 			</CardHeader>
 
@@ -30,7 +28,10 @@ function CartGroupShop({ data }: { data: CartType }) {
 					{data.cartItems.map((item) => (
 						<div key={item.id} className="p-4">
 							<div className="flex gap-4">
-								<Link href={`/buyer/products/${item.product?.id}`} className="shrink-0">
+								<Link
+									href={`/buyer/products/${item.product?.id}`}
+									className="shrink-0"
+								>
 									<div className="relative h-24 w-24 overflow-hidden rounded-md border">
 										<Image
 											src={
@@ -39,7 +40,7 @@ function CartGroupShop({ data }: { data: CartType }) {
 													? item.product.images[0].publicUrl
 													: 'https://placehold.co/100/png'
 											}
-											alt={item.product?.name || "Product"}
+											alt={item.product?.name || 'Product'}
 											fill
 											className="object-cover"
 										/>
@@ -59,14 +60,14 @@ function CartGroupShop({ data }: { data: CartType }) {
 									</div>
 
 									<div className="mt-auto pt-3 flex items-center justify-between">
-										<div className="flex items-center border rounded-md">
-											<Link href={`/buyer/cart/remove/quantity/${item.id}`} className="p-1.5 hover:bg-gray-50">
-												<Minus size={16} />
-											</Link>
-											<span className="px-3 py-1 border-x text-center min-w-10">{item.quantity}</span>
-											<Link href={`/buyer/cart/add/${item.product.id}`} className="p-1.5 hover:bg-gray-50">
-												<Plus size={16} />
-											</Link>
+										<div className="flex items-center gap-2">
+											<div className="text-sm text-gray-500">Số lượng</div>
+
+											<div className="flex items-center border rounded-md">
+												<span className="px-3 py-1 border-x text-center min-w-10">
+													{item.quantity}
+												</span>
+											</div>
 										</div>
 
 										<DropdownMenu>
@@ -82,8 +83,14 @@ function CartGroupShop({ data }: { data: CartType }) {
 													</Link>
 												</DropdownMenuItem>
 												<DropdownMenuSeparator />
-												<DropdownMenuItem asChild className="text-red-500 focus:text-red-500">
-													<Link href={`/buyer/cart/remove/item/${item.id}`} className="flex items-center">
+												<DropdownMenuItem
+													asChild
+													className="text-red-500 focus:text-red-500"
+												>
+													<Link
+														href={`/buyer/cart/remove/item/${item.id}`}
+														className="flex items-center"
+													>
 														<Trash2 size={16} className="mr-2" />
 														<span>Xoá sản phẩm</span>
 													</Link>
@@ -105,20 +112,35 @@ function CartGroupShop({ data }: { data: CartType }) {
 
 				<div className="bg-gray-50 p-4 border-t">
 					<div className="flex justify-between items-center mb-4">
-						<span className="text-gray-600">Tổng ({data.cartItems.length} sản phẩm):</span>
-						<span className="text-lg font-semibold text-green-600">{getPriceFormat(data.totalPrice)}</span>
+						<span className="text-gray-600">
+							Tổng ({data.cartItems.length} sản phẩm):
+						</span>
+						<span className="text-lg font-semibold text-green-600">
+							{getPriceFormat(data.totalPrice)}
+						</span>
 					</div>
 
 					<div className="flex flex-col sm:flex-row gap-3 justify-end">
 						<Button variant="outline" asChild className="sm:order-1">
-							<Link href={`/buyer/cart/remove/shop/${data.shop.id}`} className="flex items-center">
+							<Link
+								href={`/buyer/cart/remove/shop/${data.shop.id}`}
+								className="flex items-center"
+							>
 								<Trash2 size={16} className="mr-2" />
 								<span>Xoá tất cả</span>
 							</Link>
 						</Button>
 
-						<Button asChild>
-							<Link href={`/buyer/order/checkout/${data.shop.id}`}>
+						<Button
+							variant="default"
+							className="bg-green-600 hover:bg-green-700 text-white font-medium"
+							asChild
+						>
+							<Link
+								href={`/buyer/order/checkout/${data.shop.id}`}
+								className="flex items-center "
+							>
+								<ShoppingCart size={16} className="mr-2" />
 								Mua hàng
 							</Link>
 						</Button>

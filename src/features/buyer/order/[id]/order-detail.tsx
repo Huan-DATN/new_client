@@ -70,11 +70,7 @@ async function OrderDetail({ id }: { id: number }) {
 					</div>
 				);
 			default:
-				return (
-					<Button variant="destructive" className="bg-red-500 hover:bg-red-600">
-						Hủy đơn hàng
-					</Button>
-				);
+				return null;
 		}
 	};
 

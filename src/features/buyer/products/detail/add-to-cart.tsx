@@ -6,6 +6,7 @@ import { useAppSelector } from '@/hooks/use-app-selector';
 import {
 	decrement,
 	increment,
+	setNumberStock,
 	setProductId,
 } from '@/redux/currentProduct/currentProductReducer';
 import { LogIn, Minus, Plus, ShoppingCart } from 'lucide-react';
@@ -13,13 +14,14 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { useAppContext } from '../../../../context/app-provider';
 
-function AddToCart({ id }: { id: number }) {
+function AddToCart({ id, numberStock }: { id: number; numberStock: number }) {
 	const { isAuthenticated } = useAppContext();
 	const dispatch = useAppDispatch();
 	const quantity = useAppSelector((state) => state.currentProduct.quantity);
 
 	useEffect(() => {
 		dispatch(setProductId(id));
+		dispatch(setNumberStock(numberStock));
 	}, [dispatch, id]);
 
 	const handleIncrease = () => {
@@ -42,9 +44,7 @@ function AddToCart({ id }: { id: number }) {
 						asChild
 						className="text-white bg-green-600 hover:bg-green-700"
 					>
-						<Link href="/auth/login">
-							Đăng nhập ngay
-						</Link>
+						<Link href="/auth/login">Đăng nhập ngay</Link>
 					</Button>
 				</div>
 			) : (
@@ -85,19 +85,17 @@ function AddToCart({ id }: { id: number }) {
 							disabled={!isAuthenticated}
 							asChild
 						>
-							<Link href={`/buyer/cart/add/${id}`} className="flex items-center justify-center">
+							<Link
+								href={`/buyer/cart/add/${id}`}
+								className={`flex items-center justify-center ${
+									quantity >= numberStock
+										? 'bg-gray-300 cursor-not-allowed'
+										: ''
+								}`}
+								aria-disabled={quantity >= numberStock}
+							>
 								<ShoppingCart className="w-5 h-5 mr-2" />
 								Thêm vào giỏ
-							</Link>
-						</Button>
-
-						<Button
-							className="flex-1 h-12 bg-green-600 hover:bg-green-700 text-white"
-							disabled={!isAuthenticated}
-							asChild
-						>
-							<Link href={`/buyer/checkout/${id}?quantity=${quantity}`}>
-								Mua ngay
 							</Link>
 						</Button>
 					</div>

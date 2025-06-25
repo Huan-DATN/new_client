@@ -39,13 +39,14 @@ function CommentsList({ id }: { id: number }) {
 							</p>
 							<div className="flex space-x-1 mt-2">
 								{[...Array(5)].map((_, index) => (
-									<span key={index} className="text-yellow-500">
-										{index < comment.rating ? (
-											<Star color="#ff0" />
-										) : (
-											<Star color="#000000" strokeWidth={1} />
-										)}
-									</span>
+									<Star
+										key={index}
+										className={`h-5 w-5 ${
+											index < comment.rating!
+												? 'fill-yellow-400 text-yellow-400'
+												: 'text-gray-300'
+										}`}
+									/>
 								))}
 							</div>
 						</div>

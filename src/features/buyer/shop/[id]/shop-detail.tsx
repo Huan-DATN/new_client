@@ -3,7 +3,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Store } from 'lucide-react';
 import { cookies } from 'next/headers';
 import ShopAbout from './shop-about';
-import ShopInfo from './shop-info';
 import ShopProductsSection from './shop-products-section';
 
 async function ShopDetail({ id }: { id: number }) {
@@ -27,21 +26,13 @@ async function ShopDetail({ id }: { id: number }) {
 					</h1>
 				</div>
 
-				<div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-					{/* Sidebar */}
-					<div className="lg:col-span-1 bg-white rounded-lg p-6">
-						<ShopInfo data={shopData} />
-					</div>
-
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 					{/* Main Content */}
-					<div className="lg:col-span-3">
+					<div className="lg:col-span-2">
 						<Tabs defaultValue="products" className="w-full">
 							<TabsList className="w-full grid grid-cols-3 mb-6">
 								<TabsTrigger value="products" className="rounded-md">
 									Sản phẩm
-								</TabsTrigger>
-								<TabsTrigger value="reviews" className="rounded-md">
-									Đánh giá
 								</TabsTrigger>
 								<TabsTrigger value="about" className="rounded-md">
 									Giới thiệu

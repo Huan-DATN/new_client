@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 import { toast } from 'sonner';
 import cartRequest from '../../../../api/cartRequest';
 import { useAppSelector } from '../../../../hooks/use-app-selector';
-function AddItem() {
+
+function AddItem({ numberStock }: { numberStock: number }) {
 	const router = useRouter();
 	const { productId, quantity } = useAppSelector(
 		(state) => state.currentProduct
@@ -24,7 +25,7 @@ function AddItem() {
 
 		addItemToCart();
 	}, [productId, quantity]);
-	return <div>AddItem</div>;
+	return <div></div>;
 }
 
 export default AddItem;

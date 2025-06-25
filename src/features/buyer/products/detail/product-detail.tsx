@@ -95,7 +95,7 @@ async function ProductDetail({ id }: { id: string }) {
 
 						<div className="flex items-center gap-2 mb-2">
 							<div className="flex">
-								{[...Array(4)].map((_, index) => (
+								{[...Array(5)].map((_, index) => (
 									<Star
 										key={index}
 										className={`h-5 w-5 ${
@@ -178,7 +178,7 @@ async function ProductDetail({ id }: { id: string }) {
 					{/* Add to cart section */}
 					{role === 'BUYER' && (
 						<div className="mt-auto">
-							<AddToCart id={data.id} />
+							<AddToCart id={data.id} numberStock={data.quantity} />
 						</div>
 					)}
 				</div>
