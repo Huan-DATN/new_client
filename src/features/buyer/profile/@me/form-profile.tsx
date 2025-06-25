@@ -79,7 +79,9 @@ const FormProfile = ({ profile }: { profile: Profile }) => {
 			};
 
 			const result = await userRequest.updateMe(user.id, bodyUpdateMe);
-			toast.success(result.payload.message);
+			toast.success('Cập nhật thông tin thành công', {
+				description: 'Thông tin của bạn đã được cập nhật thành công',
+			});
 			setUser(result.payload.data);
 			router.refresh();
 		} catch (error: any) {

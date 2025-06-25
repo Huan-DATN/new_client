@@ -22,6 +22,7 @@ import {
 	setComment,
 	setRatings,
 } from '@/redux/ratingProducts/ratingProductsReducer';
+import { Star } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -95,10 +96,13 @@ export default function RatingsDialog({
 						góp phần cải thiện chất lượng dịch vụ của chúng tôi.
 					</DialogDescription>
 				</DialogHeader>
-				<div className="grid gap-4 py-4">
+				<div className="grid gap-4 py-4 max-h-[500px] overflow-y-auto">
 					{items.map(({ product }) => (
-						<div key={product.id} className="flex items-center">
-							<div className="flex flex-col items-center">
+						<div
+							key={product.id}
+							className="grid grid-cols-2 items-center gap-4"
+						>
+							<div className="flex flex-col items-center gap-2">
 								<Image
 									src={product.images[0]?.publicUrl}
 									alt={product.name}
@@ -109,7 +113,7 @@ export default function RatingsDialog({
 								<Label htmlFor={`rating-${product.id}`}>{product.name}</Label>
 							</div>
 
-							<div className="ml-4 flex-1">
+							<div className="flex-1">
 								<Ratings
 									rating={getRating(ratings, product.id)}
 									variant="destructive"
@@ -127,6 +131,7 @@ export default function RatingsDialog({
 											})
 										);
 									}}
+									Icon={Star}
 								/>
 
 								<div className="grid w-full gap-1.5">

@@ -51,11 +51,10 @@ const Ratings = ({ ...props }: RatingsProps) => {
 	return (
 		<div className={cn('flex items-center gap-2')} {...props}>
 			{[...Array(fullStars)].map((_, i) => (
-				<Icon
+				<Star
 					key={i}
-					size={size}
 					className={cn(
-						fill ? 'fill-current' : 'fill-transparent',
+						fill ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300',
 						ratingVariants[variant].star
 					)}
 				/>

@@ -15,6 +15,7 @@ function ConfirmButton({ id }: { id: number }) {
 
 			toast.success('Xác nhận nhận được hàng thành công');
 
+			router.push('/buyer/order/me');
 			router.refresh();
 		} catch (error) {
 			handleErrorApi({
