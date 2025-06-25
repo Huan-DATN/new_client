@@ -133,7 +133,6 @@ function ProductUpdateForm({
 		try {
 			let images: number[] = [];
 
-			// Upload all images
 			if (files && files.length > 0) {
 				const uploadPromises = files.map(async (file) => {
 					const formData = new FormData();
@@ -157,7 +156,7 @@ function ProductUpdateForm({
 				bodyCreateProduct
 			);
 
-			toast.success('Thêm sản phẩm thành công');
+			toast.success('Cập nhật sản phẩm thành công');
 			router.push('/seller/product');
 			router.refresh();
 		} catch (error: any) {
@@ -248,9 +247,6 @@ function ProductUpdateForm({
 									<div className="space-y-4">
 										<div className="flex items-center justify-between">
 											<h3 className="text-sm font-medium">Hình ảnh hiện tại</h3>
-											<p className="text-xs text-gray-500">
-												Click vào X để xóa hình ảnh
-											</p>
 										</div>
 										<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
 											{product.images.map((image, index) => (

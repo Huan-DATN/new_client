@@ -1,7 +1,9 @@
-import OrderDetail from '@/features/buyer/order/[id]/order-detail';
+import OrderDetailPage from '@/features/buyer/order/[id]/order-detail-page';
 
-function Page({ params }: { params: { id: number } }) {
-	return <OrderDetail id={params.id} />;
+async function Page({ params }: { params: { id: string } }) {
+	const { id } = await params;
+
+	return <OrderDetailPage id={Number(id)} />;
 }
 
 export default Page;

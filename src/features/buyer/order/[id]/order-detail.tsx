@@ -1,3 +1,5 @@
+'use client';
+
 import orderRequest from '@/api/orderRequest';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,34 +20,48 @@ import {
 	Truck,
 	User2Icon,
 } from 'lucide-react';
-import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { OrderDetailResType } from '../../../../schemaValidations/response/order';
 import OrderStatusBadge from '../order-status-badge';
 import ConfirmButton from './confirm-button';
 import RatingsDialog from './ratings-dialog';
 
-async function OrderDetail({ id }: { id: number }) {
-	const response = await orderRequest.getOrderDetail(id);
-	const { payload } = response;
-	const sessionToken = (await cookies()).get('sessionToken')?.value;
-	if (!sessionToken) {
-		redirect('/auth/login');
-	}
+function OrderDetail({
+	sessionToken,
+	id,
+}: {
+	sessionToken: string;
+	id: number;
+}) {
+	const [orderDetail, setOrderDetail] = useState<
+		OrderDetailResType['data'] | null
+	>(null);
 
-	const latestActiveStatus = getLastestActiveStatus(payload.data.OrderStatus);
+	useEffect(() => {
+		async function getOrderDetail() {
+			const response = await orderRequest.getOrderDetail(id);
+			const { payload } = response;
+			setOrderDetail(payload.data);
+		}
 
-	// Determine action buttons based on order status
+		getOrderDetail();
+	}, [id]);
+
+	if (!orderDetail) return null;
+
+	const latestActiveStatus = getLastestActiveStatus(orderDetail.OrderStatus);
+
 	const renderActionButton = () => {
 		if (
-			checkCompletedOrder(payload.data.OrderStatus) &&
-			!payload.data.isCommented
+			checkCompletedOrder(orderDetail.OrderStatus) &&
+			!orderDetail?.isCommented
 		) {
 			return (
 				<div className="flex gap-3">
 					<RatingsDialog
-						items={payload.data.items}
+						items={orderDetail?.items ?? []}
 						orderId={id}
 						sessionToken={sessionToken}
 					/>
@@ -90,7 +106,7 @@ async function OrderDetail({ id }: { id: number }) {
 							<div className="flex flex-col">
 								<div className="text-sm text-gray-500">Đơn hàng</div>
 								<div className="text-lg font-bold text-primary">
-									#MH{payload.data.id}
+									#MH{orderDetail.id}
 								</div>
 							</div>
 							<OrderStatusBadge status={latestActiveStatus} size="lg" />
@@ -103,7 +119,7 @@ async function OrderDetail({ id }: { id: number }) {
 										<span className="text-sm">Ngày đặt hàng:</span>
 									</div>
 									<span className="font-medium">
-										{getDateFormat(new Date(payload.data.createdAt))}
+										{getDateFormat(new Date(orderDetail.createdAt))}
 									</span>
 								</div>
 
@@ -112,7 +128,7 @@ async function OrderDetail({ id }: { id: number }) {
 										<Truck size={18} />
 										<span className="text-sm">Phương thức thanh toán:</span>
 									</div>
-									{payload.data.paymentMethod === 'BANK_TRANSFER' ? (
+									{orderDetail.paymentMethod === 'BANK_TRANSFER' ? (
 										<>
 											<Badge
 												variant="outline"
@@ -121,7 +137,7 @@ async function OrderDetail({ id }: { id: number }) {
 												Chuyển khoản
 											</Badge>
 											<Image
-												src={payload.data.payment?.image?.publicUrl || ''}
+												src={orderDetail.payment?.image?.publicUrl || ''}
 												alt="Bank Transfer"
 												width={100}
 												height={100}
@@ -152,7 +168,7 @@ async function OrderDetail({ id }: { id: number }) {
 						</CardHeader>
 						<CardContent className="p-0">
 							<div className="divide-y">
-								{payload.data.items.map((item) => (
+								{orderDetail.items.map((item) => (
 									<div key={item.id} className="flex items-center gap-4 p-4">
 										<div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md border">
 											<Image
@@ -188,7 +204,7 @@ async function OrderDetail({ id }: { id: number }) {
 								<div className="flex justify-between">
 									<span className="text-gray-600">Tổng tiền sản phẩm:</span>
 									<span className="font-medium">
-										{getPriceFormat(payload.data.total - 0)}
+										{getPriceFormat(orderDetail.total - 0)}
 									</span>
 								</div>
 								<div className="flex justify-between">
@@ -201,7 +217,7 @@ async function OrderDetail({ id }: { id: number }) {
 										Tổng thanh toán:
 									</span>
 									<span className="text-xl font-bold text-green-600">
-										{getPriceFormat(payload.data.total)}
+										{getPriceFormat(orderDetail.total)}
 									</span>
 								</div>
 							</div>
@@ -215,8 +231,8 @@ async function OrderDetail({ id }: { id: number }) {
 						</CardHeader>
 						<CardContent className="p-6">
 							<OrderTimeLine
-								id={payload.data.id}
-								data={payload.data.OrderStatus}
+								id={orderDetail.id}
+								data={orderDetail.OrderStatus}
 							/>
 						</CardContent>
 					</Card>
@@ -236,9 +252,9 @@ async function OrderDetail({ id }: { id: number }) {
 									<div>
 										<div className="text-sm text-gray-500">Người nhận:</div>
 										<div className="font-medium">
-											{payload.data.user.firstName +
+											{orderDetail.user.firstName +
 												' ' +
-												payload.data.user.lastName}
+												orderDetail.user.lastName}
 										</div>
 									</div>
 								</div>
@@ -247,7 +263,7 @@ async function OrderDetail({ id }: { id: number }) {
 									<div>
 										<div className="text-sm text-gray-500">Số điện thoại:</div>
 										<div className="font-medium">
-											{payload.data.user.phone || 'Không có thông tin'}
+											{orderDetail.user.phone || 'Không có thông tin'}
 										</div>
 									</div>
 								</div>
@@ -257,9 +273,7 @@ async function OrderDetail({ id }: { id: number }) {
 										<div className="text-sm text-gray-500">
 											Địa chỉ giao hàng:
 										</div>
-										<div className="font-medium">
-											{payload.data.addressLine}
-										</div>
+										<div className="font-medium">{orderDetail.addressLine}</div>
 									</div>
 								</div>
 							</div>
@@ -276,7 +290,7 @@ async function OrderDetail({ id }: { id: number }) {
 								<div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border">
 									<Image
 										src={
-											payload.data.shop?.image?.publicUrl ||
+											orderDetail.shop?.image?.publicUrl ||
 											'https://placehold.co/200x200/png'
 										}
 										alt="Shop Image"
@@ -286,10 +300,10 @@ async function OrderDetail({ id }: { id: number }) {
 								</div>
 								<div>
 									<div className="font-semibold">
-										{payload.data.shop.shopName}
+										{orderDetail.shop.shopName}
 									</div>
 									<Link
-										href={`/buyer/shop/${payload.data.shop.id}`}
+										href={`/buyer/shop/${orderDetail.shop.id}`}
 										className="text-sm text-primary hover:underline"
 									>
 										Xem cửa hàng

@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import cartRequest from '../../../../api/cartRequest';
 import { useAppSelector } from '../../../../hooks/use-app-selector';
 
-function AddItem({ numberStock }: { numberStock: number }) {
+function AddItem() {
 	const router = useRouter();
 	const { productId, quantity } = useAppSelector(
 		(state) => state.currentProduct
